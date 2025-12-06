@@ -14,6 +14,7 @@ class Chart extends StatefulWidget {
 class _ChartState extends State<Chart> {
   int touchedIndex = -1;
 
+  // ff
   final Map<int, String> statusMapping = {
     0: 'pending',
     1: 'cancelled',
