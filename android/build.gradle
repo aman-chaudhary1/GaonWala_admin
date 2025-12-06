@@ -1,0 +1,32 @@
+buildscript {
+    ext {
+        kotlin_version = '1.9.23' // ✅ Updated Kotlin version compatible with Gradle 8.x
+    }
+    repositories {
+        google()
+        mavenCentral() // ✅ Replaced deprecated jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.5.2' // ✅ Works with Gradle 8.7 and Java 21
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral() // ✅ Replaced deprecated jcenter()
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
