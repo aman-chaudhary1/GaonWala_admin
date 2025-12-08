@@ -80,17 +80,17 @@ class DataProvider extends ChangeNotifier {
     getAllOrders();
   }
 
-
   //TODO: should complete getAllCategory(complete)
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {
     try {
       Response response = await service.getItems(endpointUrl: 'categories');
       if (response.isOk) {
-        ApiResponse<List<Category>> apiResponse = ApiResponse<
-            List<Category>>.fromJson(
-            response.body,
-                (json) =>
-                (json as List).map((item) => Category.fromJson(item)).toList());
+        ApiResponse<List<Category>> apiResponse =
+            ApiResponse<List<Category>>.fromJson(
+                response.body,
+                (json) => (json as List)
+                    .map((item) => Category.fromJson(item))
+                    .toList());
         _allCategories = apiResponse.data ?? [];
         _filteredCategories =
             List.from(_allCategories); // Initialize filtered list with all data
@@ -103,7 +103,6 @@ class DataProvider extends ChangeNotifier {
     }
     return _filteredCategories;
   }
-
 
   //TODO: should complete filterCategories(complete)
   void filterCategories(String Keyword) {
@@ -123,11 +122,10 @@ class DataProvider extends ChangeNotifier {
     try {
       Response response = await service.getItems(endpointUrl: 'SubCategories');
       if (response.isOk) {
-        ApiResponse<List<SubCategory>> apiResponse = ApiResponse<
-            List<SubCategory>>.fromJson(
-            response.body,
-                (json) =>
-                (json as List)
+        ApiResponse<List<SubCategory>> apiResponse =
+            ApiResponse<List<SubCategory>>.fromJson(
+                response.body,
+                (json) => (json as List)
                     .map((item) => SubCategory.fromJson(item))
                     .toList());
         _allSubCategories = apiResponse.data ?? [];
@@ -161,11 +159,12 @@ class DataProvider extends ChangeNotifier {
     try {
       Response response = await service.getItems(endpointUrl: 'brands');
       if (response.isOk) {
-        ApiResponse<List<Brand>> apiResponse = ApiResponse<
-            List<Brand>>.fromJson(
-            response.body,
-                (json) =>
-                (json as List).map((item) => Brand.fromJson(item)).toList());
+        ApiResponse<List<Brand>> apiResponse =
+            ApiResponse<List<Brand>>.fromJson(
+                response.body,
+                (json) => (json as List)
+                    .map((item) => Brand.fromJson(item))
+                    .toList());
         _allBrands = apiResponse.data ?? [];
         _filteredBrands =
             List.from(_allBrands); // Initialize filtered list with all data
@@ -197,11 +196,10 @@ class DataProvider extends ChangeNotifier {
     try {
       Response response = await service.getItems(endpointUrl: 'variantTypes');
       if (response.isOk) {
-        ApiResponse<List<VariantType>> apiResponse = ApiResponse<
-            List<VariantType>>.fromJson(
-            response.body,
-                (json) =>
-                (json as List)
+        ApiResponse<List<VariantType>> apiResponse =
+            ApiResponse<List<VariantType>>.fromJson(
+                response.body,
+                (json) => (json as List)
                     .map((item) => VariantType.fromJson(item))
                     .toList());
         _allVariantTypes = apiResponse.data ?? [];
@@ -230,17 +228,17 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   //TODO: should complete getAllVariant(complete)
   Future<List<Variant>> getAllVariant({bool showSnack = false}) async {
     try {
       Response response = await service.getItems(endpointUrl: 'variants');
       if (response.isOk) {
-        ApiResponse<List<Variant>> apiResponse = ApiResponse<
-            List<Variant>>.fromJson(
-            response.body,
-                (json) =>
-                (json as List).map((item) => Variant.fromJson(item)).toList());
+        ApiResponse<List<Variant>> apiResponse =
+            ApiResponse<List<Variant>>.fromJson(
+                response.body,
+                (json) => (json as List)
+                    .map((item) => Variant.fromJson(item))
+                    .toList());
         _allVariants = apiResponse.data ?? [];
         _filteredVariants =
             List.from(_allVariants); // Initialize filtered list with all data
@@ -271,11 +269,12 @@ class DataProvider extends ChangeNotifier {
   Future<void> getAllProduct({bool showSnack = false}) async {
     try {
       Response response = await service.getItems(endpointUrl: 'products');
-      ApiResponse<List<Product>> apiResponse = ApiResponse<
-          List<Product>>.fromJson(
-          response.body,
-              (json) =>
-              (json as List).map((item) => Product.fromJson(item)).toList());
+      ApiResponse<List<Product>> apiResponse =
+          ApiResponse<List<Product>>.fromJson(
+              response.body,
+              (json) => (json as List)
+                  .map((item) => Product.fromJson(item))
+                  .toList());
       _allProducts = apiResponse.data ?? [];
       _filteredProducts =
           List.from(_allProducts); // Initialize filtered list with all data
@@ -294,15 +293,19 @@ class DataProvider extends ChangeNotifier {
     } else {
       final lowerKeyword = Keyword.toLowerCase();
       _filteredProducts = _allProducts.where((product) {
-        final productNameContainsKeyword = (product.name ?? '')
-            .toLowerCase()
-            .contains(lowerKeyword);
+        final productNameContainsKeyword =
+            (product.name ?? '').toLowerCase().contains(lowerKeyword);
         final categoryNameContainsKeyword = product.proSubCategoryId?.name
-            ?.toLowerCase().contains(lowerKeyword) ?? false;
+                ?.toLowerCase()
+                .contains(lowerKeyword) ??
+            false;
         final subCategoryNameContainsKeyword = product.proSubCategoryId?.name
-            ?.toLowerCase().contains(lowerKeyword) ?? false;
+                ?.toLowerCase()
+                .contains(lowerKeyword) ??
+            false;
 
-        return productNameContainsKeyword || categoryNameContainsKeyword ||
+        return productNameContainsKeyword ||
+            categoryNameContainsKeyword ||
             subCategoryNameContainsKeyword;
       }).toList();
     }
@@ -310,15 +313,16 @@ class DataProvider extends ChangeNotifier {
   }
 
   //TODO: should complete getAllCoupons
-Future<List<Coupon>> getAllCoupons({bool showSnack = false}) async {
+  Future<List<Coupon>> getAllCoupons({bool showSnack = false}) async {
     try {
       Response response = await service.getItems(endpointUrl: 'couponCodes');
       if (response.isOk) {
-        ApiResponse<List<Coupon>> apiResponse = ApiResponse<
-            List<Coupon>>.fromJson(
-            response.body,
-                (json) =>
-                (json as List).map((item) => Coupon.fromJson(item)).toList());
+        ApiResponse<List<Coupon>> apiResponse =
+            ApiResponse<List<Coupon>>.fromJson(
+                response.body,
+                (json) => (json as List)
+                    .map((item) => Coupon.fromJson(item))
+                    .toList());
         _allCoupons = apiResponse.data ?? [];
         _filteredCoupons =
             List.from(_allCoupons); // Initialize filtered list with all data
@@ -333,7 +337,7 @@ Future<List<Coupon>> getAllCoupons({bool showSnack = false}) async {
   }
 
   //TODO: should complete filterCoupons
-void filterCoupons(String Keyword) {
+  void filterCoupons(String Keyword) {
     if (Keyword.isEmpty) {
       _filteredCoupons = List.from(_allCoupons);
     } else {
@@ -346,17 +350,16 @@ void filterCoupons(String Keyword) {
   }
   //TODO: should complete getAllPosters
 
-
-
-Future<List<Poster>> getAllPosters({bool showSnack = false}) async {
+  Future<List<Poster>> getAllPosters({bool showSnack = false}) async {
     try {
       Response response = await service.getItems(endpointUrl: 'posters');
       if (response.isOk) {
-        ApiResponse<List<Poster>> apiResponse = ApiResponse<
-            List<Poster>>.fromJson(
-            response.body,
-                (json) =>
-                (json as List).map((item) => Poster.fromJson(item)).toList());
+        ApiResponse<List<Poster>> apiResponse =
+            ApiResponse<List<Poster>>.fromJson(
+                response.body,
+                (json) => (json as List)
+                    .map((item) => Poster.fromJson(item))
+                    .toList());
         _allPosters = apiResponse.data ?? [];
         _filteredPosters =
             List.from(_allPosters); // Initialize filtered list with all data
@@ -372,8 +375,7 @@ Future<List<Poster>> getAllPosters({bool showSnack = false}) async {
 
   //TODO: should complete filterPosters
 
-
-void filterPosters(String Keyword) {
+  void filterPosters(String Keyword) {
     if (Keyword.isEmpty) {
       _filteredPosters = List.from(_allPosters);
     } else {
@@ -386,10 +388,42 @@ void filterPosters(String Keyword) {
   }
 
   //TODO: should complete getAllNotifications
-
+  Future<List<MyNotification>> getAllNotifications(
+      {bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'notifications');
+      if (response.isOk) {
+        ApiResponse<List<MyNotification>> apiResponse =
+            ApiResponse<List<MyNotification>>.fromJson(
+                response.body,
+                (json) => (json as List)
+                    .map((item) => MyNotification.fromJson(item))
+                    .toList());
+        _allNotifications = apiResponse.data ?? [];
+        _filteredNotifications = List.from(
+            _allNotifications); // Initialize filtered list with all data
+        notifyListeners();
+        if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      }
+    } catch (e) {
+      SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredNotifications;
+  }
 
   //TODO: should complete filterNotifications
-
+  void filterNotifications(String Keyword) {
+    if (Keyword.isEmpty) {
+      _filteredNotifications = List.from(_allNotifications);
+    } else {
+      final lowerKeyword = Keyword.toLowerCase();
+      _filteredNotifications = _allNotifications.where((notification) {
+        return (notification.title ?? '').toLowerCase().contains(lowerKeyword);
+      }).toList();
+    }
+    notifyListeners();
+  }
 
   //TODO: should complete getAllOrders
   Future<List<Order>> getAllOrders({bool showSnack = false}) async {
@@ -397,9 +431,10 @@ void filterPosters(String Keyword) {
       final response = await service.getItems(endpointUrl: "orders");
 
       if (response.isOk) {
-        ApiResponse<List<Order>> apiResponse = ApiResponse<List<Order>>.fromJson(
+        ApiResponse<List<Order>> apiResponse =
+            ApiResponse<List<Order>>.fromJson(
           response.body,
-              (json) => (json as List).map((item) => Order.fromJson(item)).toList(),
+          (json) => (json as List).map((item) => Order.fromJson(item)).toList(),
         );
 
         _allOrders = apiResponse.data ?? [];
@@ -417,20 +452,20 @@ void filterPosters(String Keyword) {
     return _filteredOrders;
   }
 
-
   //TODO: should complete filterOrders
   void filterOrders(String status) {
     if (status.toLowerCase() == "all order") {
       _filteredOrders = List.from(_allOrders);
     } else {
-      _filteredOrders = _allOrders.where(
+      _filteredOrders = _allOrders
+          .where(
             (o) => (o.orderStatus ?? '').toLowerCase() == status.toLowerCase(),
-      ).toList();
+          )
+          .toList();
     }
 
     notifyListeners();
   }
-
 
   //TODO: should complete calculateOrdersWithStatus
   Map<String, int> calculateOrdersWithStatus() {
@@ -456,7 +491,6 @@ void filterPosters(String Keyword) {
     return result;
   }
 
-
   //TODO: should complete filterProductsByQuantity(complete)
   void filterProductsByQuantity(String productQntType) {
     if (productQntType == 'All Product') {
@@ -471,7 +505,8 @@ void filterPosters(String Keyword) {
       }).toList();
     } else if (productQntType == 'Other Stock') {
       _filteredProducts = _allProducts.where((product) {
-        return product.quantity != null && product.quantity != 0 &&
+        return product.quantity != null &&
+            product.quantity != 0 &&
             product.quantity != 1;
       }).toList();
     } else {
@@ -480,21 +515,20 @@ void filterPosters(String Keyword) {
     notifyListeners();
   }
 
-
   //TODO: should complete calculateProductWithQuantity(complete)
 
-int calculateProductWithQuantity({int? quantity}) {
-  int totalProduct = 0;
-  // if targetQuantity is null it return total products 
-  if (quantity == null) {
-    totalProduct = _allProducts.length;
-  } else {
-    for (Product product in _allProducts) {
-      if (product.quantity != null && product.quantity == quantity) {
-        totalProduct++;
+  int calculateProductWithQuantity({int? quantity}) {
+    int totalProduct = 0;
+    // if targetQuantity is null it return total products
+    if (quantity == null) {
+      totalProduct = _allProducts.length;
+    } else {
+      for (Product product in _allProducts) {
+        if (product.quantity != null && product.quantity == quantity) {
+          totalProduct++;
+        }
       }
     }
+    return totalProduct;
   }
-  return totalProduct;
-}
 }

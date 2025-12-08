@@ -2,14 +2,11 @@ import 'package:admin/utility/extensions.dart';
 
 import '../../../core/data/data_provider.dart';
 import '../../../models/variant.dart';
-import '../provider/variant_provider.dart';
 import 'add_variant_form.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
-import '../../../models/variant_type.dart';
 
 
 class VariantsListSection extends StatelessWidget {

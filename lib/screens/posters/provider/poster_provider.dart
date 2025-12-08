@@ -7,9 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import '../../../core/data/data_provider.dart';
-import '../../../models/category.dart';
 import '../../../models/poster.dart';
 import '../../../utility/snack_bar_helper.dart';
 
