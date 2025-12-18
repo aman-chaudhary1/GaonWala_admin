@@ -15,64 +15,86 @@ class ProductSummeryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: (){
-        onTap(info.title);
-      },
-      child: Container(
-        padding: EdgeInsets.all(defaultPadding),
-        decoration: BoxDecoration(
-          color: secondaryColor,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Reduce padding for smaller cards
+        final isSmall = constraints.maxWidth < 150;
+        final cardPadding = isSmall ? defaultPadding * 0.5 : defaultPadding;
+        final iconSize = isSmall ? 30.0 : 40.0;
+        final iconPadding = isSmall ? defaultPadding * 0.5 : defaultPadding * 0.75;
+
+        return InkWell(
+          onTap: () {
+            onTap(info.title);
+          },
+          child: Container(
+            padding: EdgeInsets.all(cardPadding),
+            decoration: BoxDecoration(
+              color: secondaryColor,
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: EdgeInsets.all(defaultPadding * 0.75),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: info.color!.withOpacity(0.1),
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: SvgPicture.asset(
-                    info.svgSrc!,
-                    colorFilter: ColorFilter.mode(
-                        info.color ?? Colors.black, BlendMode.srcIn),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(iconPadding),
+                      height: iconSize,
+                      width: iconSize,
+                      decoration: BoxDecoration(
+                        color: info.color!.withOpacity(0.1),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: SvgPicture.asset(
+                        info.svgSrc!,
+                        colorFilter: ColorFilter.mode(
+                            info.color ?? Colors.black, BlendMode.srcIn),
+                      ),
+                    ),
+                    Icon(Icons.more_vert, 
+                      color: Colors.white54,
+                      size: isSmall ? 18 : 24,
+                    )
+                  ],
+                ),
+                SizedBox(height: cardPadding * 0.5),
+                Flexible(
+                  child: Text(
+                    info.title!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: isSmall ? 12 : null,
+                    ),
                   ),
                 ),
-                Icon(Icons.more_vert, color: Colors.white54)
-              ],
-            ),
-            Text(
-              info.title!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            ProgressLine(
-              color: info.color,
-              percentage: info.percentage,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+                SizedBox(height: cardPadding * 0.5),
+                ProgressLine(
+                  color: info.color,
+                  percentage: info.percentage,
+                ),
+                SizedBox(height: cardPadding * 0.5),
                 Text(
                   "${info.productsCount} Product",
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .copyWith(color: Colors.white70),
+                      .copyWith(
+                        color: Colors.white70,
+                        fontSize: isSmall ? 10 : null,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

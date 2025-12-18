@@ -11,6 +11,7 @@ class Product {
   ProTypeRef? proVariantTypeId;
   List<String>? proVariantId;
   List<Images>? images;
+  bool? todaysSpecial;
   String? createdAt;
   String? updatedAt;
   int? iV;
@@ -28,6 +29,7 @@ class Product {
         this.proVariantTypeId,
         this.proVariantId,
         this.images,
+        this.todaysSpecial,
         this.createdAt,
         this.updatedAt,
         this.iV});
@@ -58,6 +60,7 @@ class Product {
         images!.add(new Images.fromJson(v));
       });
     }
+    todaysSpecial = json['todaysSpecial'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
@@ -87,6 +90,7 @@ class Product {
     if (this.images != null) {
       data['images'] = this.images!.map((v) => v.toJson()).toList();
     }
+    data['todaysSpecial'] = this.todaysSpecial;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;

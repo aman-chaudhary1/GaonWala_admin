@@ -26,77 +26,149 @@ class PosterProvider extends ChangeNotifier {
   PosterProvider(this._dataProvider);
 
   //TODO: should complete addPoster
-addPoster() async {
+  addPoster() async {
     try {
-      if(selectedImage == null){
+      if (selectedImage == null) {
         SnackBarHelper.showErrorSnackBar('Please select an image');
         return;
       }
-      print('Adding poster with name: ${posterNameCtrl.text}');
+
       Map<String, dynamic> formData = {
         'posterName': posterNameCtrl.text,
-        'image': 'no_data',//image path will be add from serbver side
+        'image': 'no_data',
       };
-     final FormData form = await createFormData(imgXFile: imgXFile, formData: formData);
-final response = await service.addItem(endpointUrl: 'posters', itemData: form);
-      if(response.isOk){
-        print('Response received: ${response.body}');
-        ApiResponse apiResponse = ApiResponse.fromJson(response.body,null);
-        print('Responses received:');
 
-        if(apiResponse.success == true){
-          print('Poster added successfully');
+      final FormData form =
+      await createFormData(imgXFile: imgXFile, formData: formData);
+
+      final response =
+      await service.addItem(endpointUrl: 'posters', itemData: form);
+
+      if (response.isOk && response.body != null) {
+        // final apiResponse = ApiResponse.fromJson(response.body, null);
+        ApiResponse<Poster> apiResponse =
+        ApiResponse.fromJson(response.body, (json) => Poster.fromJson(json as Map<String, dynamic>));
+
+        if (apiResponse.success) {
           clearFields();
-          SnackBarHelper.showSuccessSnackBar(apiResponse.message ?? 'Poster added successfully');
-          log('Poster added successfully');
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
           _dataProvider.getAllPosters();
-      } else {
-          SnackBarHelper.showErrorSnackBar(apiResponse.message ?? 'Failed to add poster');
-          log('Failed to add poster: ${apiResponse.message}');
+        } else {
+          SnackBarHelper.showErrorSnackBar(apiResponse.message);
         }
       } else {
-        SnackBarHelper.showErrorSnackBar('Failed to add poster. Server error.');
-        log('Failed to add poster. Server error: ${response.statusCode}');
+        SnackBarHelper.showErrorSnackBar('Server error');
+      }
+    } catch (e, s) {
+      log('Add poster error', error: e, stackTrace: s);
+      SnackBarHelper.showErrorSnackBar('Something went wrong');
+    }
+  }
+
+// addPoster() async {
+//     try {
+//       if(selectedImage == null){
+//         SnackBarHelper.showErrorSnackBar('Please select an image');
+//         return;
+//       }
+//       print('Adding poster with name: ${posterNameCtrl.text}');
+//       Map<String, dynamic> formData = {
+//         'posterName': posterNameCtrl.text,
+//         'image': 'no_data',//image path will be add from serbver side
+//       };
+//      final FormData form = await createFormData(imgXFile: imgXFile, formData: formData);
+// final response = await service.addItem(endpointUrl: 'posters', itemData: form);
+//       if(response.isOk){
+//         print('Response received: ${response.body}');
+//         ApiResponse apiResponse = ApiResponse.fromJson(response.body,null);
+//         print('Responses received:');
+//
+//         if(apiResponse.success == true){
+//           print('Poster added successfully');
+//           clearFields();
+//           SnackBarHelper.showSuccessSnackBar(apiResponse.message ?? 'Poster added successfully');
+//           log('Poster added successfully');
+//           _dataProvider.getAllPosters();
+//       } else {
+//           SnackBarHelper.showErrorSnackBar(apiResponse.message ?? 'Failed to add poster');
+//           log('Failed to add poster: ${apiResponse.message}');
+//         }
+//       } else {
+//         SnackBarHelper.showErrorSnackBar('Failed to add poster. Server error.');
+//         log('Failed to add poster. Server error: ${response.statusCode}');
+//       }
+//     } catch (e) {
+//       SnackBarHelper.showErrorSnackBar('An error occurred while adding the poster.');
+//     }
+// }
+  //TODO: should complete updatePoster
+// updatePoster()async{
+//     try{
+//
+//       Map<String, dynamic> formDataMap = {
+//         'posterName': posterNameCtrl.text,
+//         'image': posterForUpdate?.imageUrl ?? '', //? image path will add from server side;
+//       };
+//
+//       final FormData form = await createFormData(imgXFile: imgXFile, formData: formDataMap);
+//
+//       final response = await service.updateItem(endpointUrl: 'posters',itemData:form, itemId: posterForUpdate?.sId ?? '');
+//
+//       if(response.isOk){
+//         ApiResponse apiResponse = ApiResponse.fromJson(response.body,null);
+//         if(apiResponse.success == true){
+//           clearFields();
+//           SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
+//          _dataProvider.getAllCategory();
+//           Console.log("category added");
+//           _dataProvider.getAllPosters();
+//         }
+//         else{
+//           SnackBarHelper.showErrorSnackBar('Failed to add Posters : ${apiResponse.message}');
+//         }
+//       }
+//       else{
+//         SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+//       }
+//     }catch(e){
+// print(e);
+// SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+// rethrow;
+//     }
+// }
+  updatePoster() async {
+    try {
+      Map<String, dynamic> formDataMap = {
+        'posterName': posterNameCtrl.text,
+        'image': posterForUpdate?.imageUrl ?? '',
+      };
+
+      final FormData form =
+      await createFormData(imgXFile: imgXFile, formData: formDataMap);
+
+      final response = await service.updateItem(
+        endpointUrl: 'posters',
+        itemData: form,
+        itemId: posterForUpdate?.sId ?? '',
+      );
+
+      if (response.isOk && response.body != null) {
+        // final apiResponse = ApiResponse.fromJson(response.body, null);
+        ApiResponse<Poster> apiResponse =
+        ApiResponse.fromJson(response.body, (json) => Poster.fromJson(json as Map<String, dynamic>));
+
+        if (apiResponse.success) {
+          clearFields();
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+          _dataProvider.getAllPosters();
+        } else {
+          SnackBarHelper.showErrorSnackBar(apiResponse.message);
+        }
       }
     } catch (e) {
-      SnackBarHelper.showErrorSnackBar('An error occurred while adding the poster.');
+      SnackBarHelper.showErrorSnackBar('Update failed');
     }
-}
-  //TODO: should complete updatePoster
-updatePoster()async{
-    try{
-      
-      Map<String, dynamic> formDataMap = {
-        'name': posterNameCtrl.text,
-        'image': posterForUpdate?.imageUrl ?? '', //? image path will add from server side;
-      };
-
-      final FormData form = await createFormData(imgXFile: imgXFile, formData: formDataMap);
-
-      final response = await service.updateItem(endpointUrl: 'posters',itemData:form, itemId: posterForUpdate?.sId ?? '');
-
-      if(response.isOk){
-        ApiResponse apiResponse = ApiResponse.fromJson(response.body,null);
-        if(apiResponse.success == true){
-          clearFields();
-          SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
-         _dataProvider.getAllCategory();
-          Console.log("category added");
-          _dataProvider.getAllPosters();
-        }
-        else{
-          SnackBarHelper.showErrorSnackBar('Failed to add Posters : ${apiResponse.message}');
-        }
-      }
-      else{
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
-      }
-    }catch(e){
-print(e);
-SnackBarHelper.showErrorSnackBar('An error occurred: $e');
-rethrow;
-    }
-}
+  }
 
   //TODO: should complete submitPoster
 submitPoster() async {

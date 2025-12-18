@@ -32,6 +32,7 @@ class DashBoardProvider extends ChangeNotifier {
   Brand? selectedBrand;
   VariantType? selectedVariantType;
   List<String> selectedVariants = [];
+  bool isTodaysSpecial = false;
 
   Product? productForUpdate;
   File? selectedMainImage,
@@ -74,6 +75,7 @@ class DashBoardProvider extends ChangeNotifier {
         'proBrandId': selectedBrand?.sId ?? '',
         'proVariantTypeId': selectedVariantType?.sId ?? '',
         'proVariantId': selectedVariants,
+        'todaysSpecial': isTodaysSpecial.toString(),
       };
       final FormData form = await createFormDataForMultipleImage(imgXFiles: [
         {'image1': mainImgXFile},
@@ -124,6 +126,7 @@ class DashBoardProvider extends ChangeNotifier {
         'proBrandId': selectedBrand?.sId ?? '',
         'proVariantTypeId': selectedVariantType?.sId ?? '',
         'proVariantId': selectedVariants,
+        'todaysSpecial': isTodaysSpecial.toString(),
       };
 
       final FormData form = await createFormDataForMultipleImage(
@@ -331,6 +334,7 @@ class DashBoardProvider extends ChangeNotifier {
           newListVariant.map((variant) => variant.name ?? '').toList();
       variantsByVariantType = variantNames;
       selectedVariants = product.proVariantId ?? [];
+      isTodaysSpecial = product.todaysSpecial ?? false;
     } else {
       clearFields();
     }
@@ -360,6 +364,7 @@ class DashBoardProvider extends ChangeNotifier {
     selectedBrand = null;
     selectedVariantType = null;
     selectedVariants = [];
+    isTodaysSpecial = false;
 
     productForUpdate = null;
 

@@ -42,7 +42,12 @@ class CategoryProvider extends ChangeNotifier {
           await service.addItem(endpointUrl: 'categories', itemData: form);
 
       if (response.isOk) {
-        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        ApiResponse<Category> apiResponse = ApiResponse.fromJson(
+          response.body,
+          (json) => Category.fromJson(json as Map<String, dynamic>),
+        );
+
+        // ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
           clearFields();
           SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
@@ -81,7 +86,12 @@ class CategoryProvider extends ChangeNotifier {
           itemId: categoryForUpdate?.sId ?? '');
 
       if (response.isOk) {
-        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        ApiResponse<Category> apiResponse = ApiResponse.fromJson(
+          response.body,
+          (json) => Category.fromJson(json as Map<String, dynamic>),
+        );
+
+        // ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
           clearFields();
           SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');

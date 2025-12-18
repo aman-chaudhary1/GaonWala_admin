@@ -39,57 +39,102 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             DashBoardHeader(),
             Gap(defaultPadding),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Column(
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final isNarrow = constraints.maxWidth < 1200;
+                final screenWidth = MediaQuery.of(context).size.width;
+                final isSmallHeader = screenWidth < 800;
+                
+                Widget buildHeaderRow() {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Expanded(
+                        child: Text(
+                          "My Products",
+                          style: Theme.of(context).textTheme.titleMedium,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (!isSmallHeader)
+                        ElevatedButton.icon(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: defaultPadding * (isSmallHeader ? 1.0 : 1.5),
+                              vertical: defaultPadding,
+                            ),
+                          ),
+                          onPressed: () {
+                            showAddProductForm(context, null);
+                          },
+                          icon: Icon(Icons.add),
+                          label: Text("Adds New"),
+                        )
+                      else
+                        IconButton(
+                          onPressed: () {
+                            showAddProductForm(context, null);
+                          },
+                          icon: Icon(Icons.add),
+                          tooltip: "Add New",
+                        ),
+                      SizedBox(width: isSmallHeader ? 8 : 20),
+                      IconButton(
+                        onPressed: () {
+                          context.read<DataProvider>().getAllProduct(showSnack: true);
+                        },
+                        icon: Icon(Icons.refresh),
+                        constraints: BoxConstraints(),
+                        padding: EdgeInsets.all(8),
+                      ),
+                    ],
+                  );
+                }
+                
+                if (isNarrow) {
+                  // Stack vertically on narrow screens
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
                         children: [
-                          Expanded(
-                            child: Text(
-                              "My Products",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ),
-                          ElevatedButton.icon(
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: defaultPadding * 1.5,
-                                vertical: defaultPadding,
-                              ),
-                            ),
-                            onPressed: () {
-                              showAddProductForm(context, null);
-                            },
-                            icon: Icon(Icons.add),
-                            label: Text("Adds New"),
-                          ),
-                          Gap(20),
-                          IconButton(
-                            onPressed: () {
-                              context.read<DataProvider>().getAllProduct(showSnack: true);
-                            },
-                            icon: Icon(Icons.refresh),
-                          ),
+                          buildHeaderRow(),
+                          Gap(defaultPadding),
+                          ProductSummerySection(),
+                          Gap(defaultPadding),
+                          ProductListSection(),
                         ],
                       ),
                       Gap(defaultPadding),
-                      ProductSummerySection(),
-                      Gap(defaultPadding),
-                      ProductListSection(),
+                      OrderDetailsSection(),
                     ],
-                  ),
-                ),
-                SizedBox(width: defaultPadding),
-                Expanded(
-                  flex: 2,
-                  child: OrderDetailsSection(),
-                ),
-              ],
+                  );
+                }
+                
+                // Original horizontal layout for wide screens
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        children: [
+                          buildHeaderRow(),
+                          Gap(defaultPadding),
+                          ProductSummerySection(),
+                          Gap(defaultPadding),
+                          ProductListSection(),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: defaultPadding),
+                    Expanded(
+                      flex: 2,
+                      child: OrderDetailsSection(),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),

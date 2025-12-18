@@ -78,6 +78,7 @@ class DataProvider extends ChangeNotifier {
     getAllPosters();
     getAllCoupons();
     getAllOrders();
+    getAllNotifications();
   }
 
   //TODO: should complete getAllCategory(complete)

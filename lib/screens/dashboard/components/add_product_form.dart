@@ -268,7 +268,21 @@ class ProductSubmitForm extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(width: defaultPadding),
+              SizedBox(height: defaultPadding),
+              Consumer<DashBoardProvider>(
+                builder: (context, dashProvider, child) {
+                  return CheckboxListTile(
+                    title: Text('Today\'s Special'),
+                    value: dashProvider.isTodaysSpecial,
+                    onChanged: (bool? value) {
+                      dashProvider.isTodaysSpecial = value ?? false;
+                      dashProvider.updateUI();
+                    },
+                    activeColor: primaryColor,
+                  );
+                },
+              ),
+              SizedBox(height: defaultPadding),
               Row(
                 children: [
                   Expanded(

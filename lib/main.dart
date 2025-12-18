@@ -74,6 +74,7 @@ import 'screens/coupon_code/provider/coupon_code_provider.dart';
 import 'screens/posters/provider/poster_provider.dart';
 import 'screens/order/provider/order_provider.dart';
 import 'screens/notification/provider/notification_provider.dart';
+import 'screens/login/provider/login_provider.dart';
 import 'utility/constants.dart';
 
 void main() {
@@ -137,8 +138,9 @@ void main() {
               previous ?? NotificationProvider(dataProvider),
         ),
 
-        /// Independent provider
+        /// Independent providers
         ChangeNotifierProvider(create: (_) => MainScreenProvider()),
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
       ],
       child: MyApp(),
     ),
@@ -158,7 +160,7 @@ class MyApp extends StatelessWidget {
         ).apply(bodyColor: Colors.white),
         canvasColor: secondaryColor,
       ),
-      initialRoute: AppPages.HOME,
+      initialRoute: AppPages.SPLASH,
       unknownRoute: GetPage(name: '/notFound', page: () => MainScreen()),
       defaultTransition: Transition.cupertino,
       getPages: AppPages.routes,

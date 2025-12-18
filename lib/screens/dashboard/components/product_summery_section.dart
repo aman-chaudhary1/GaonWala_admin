@@ -55,6 +55,27 @@ class ProductSummerySection extends StatelessWidget {
           ),
         ];
 
+        // Make grid responsive based on screen width
+        int crossAxisCount = 4;
+        double childAspectRatio = 1.4;
+        
+        if (_size.width < 800) {
+          crossAxisCount = 1;
+          childAspectRatio = 2.5;
+        } else if (_size.width < 1200) {
+          crossAxisCount = 2;
+          childAspectRatio = 1.8;
+        } else if (_size.width < 1400) {
+          crossAxisCount = 3;
+          childAspectRatio = 1.5;
+        } else if (_size.width < 1600) {
+          crossAxisCount = 4;
+          childAspectRatio = 1.4;
+        } else {
+          crossAxisCount = 4;
+          childAspectRatio = 1.4;
+        }
+
         return Column(
           children: [
             GridView.builder(
@@ -62,17 +83,17 @@ class ProductSummerySection extends StatelessWidget {
               shrinkWrap: true,
               itemCount: productSummeryItems.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
+                crossAxisCount: crossAxisCount,
                 crossAxisSpacing: defaultPadding,
                 mainAxisSpacing: defaultPadding,
-                childAspectRatio: _size.width < 1400 ? 1.1 : 1.4,
+                childAspectRatio: childAspectRatio,
               ),
               itemBuilder: (context, index) => ProductSummeryCard(
                 info: productSummeryItems[index],
                 onTap: (productType) {
                   print(productType);
                   //TODO: should complete call filterProductsByQuantity
-context.dataProvider.filterProductsByQuantity(productType ?? '');
+                  context.dataProvider.filterProductsByQuantity(productType ?? '');
                 },
               ),
             ),

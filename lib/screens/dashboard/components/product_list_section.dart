@@ -34,38 +34,45 @@ class ProductListSection extends StatelessWidget {
             width: double.infinity,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Product Name"),
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: MediaQuery.of(context).size.width - (defaultPadding * 2),
                     ),
-                    DataColumn(
-                      label: Text("Category"),
-                    ),
-                    DataColumn(
-                      label: Text("Sub Category"),
-                    ),
-                    DataColumn(
-                      label: Text("Price"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.products.length,
-                        (index) => productDataRow(dataProvider.products[index],edit: () {
+                    child: DataTable(
+                      columnSpacing: defaultPadding,
+                      columns: [
+                        DataColumn(
+                          label: Text("Product Name"),
+                        ),
+                        DataColumn(
+                          label: Text("Category"),
+                        ),
+                        DataColumn(
+                          label: Text("Sub Category"),
+                        ),
+                        DataColumn(
+                          label: Text("Price"),
+                        ),
+                        DataColumn(
+                          label: Text("Edit"),
+                        ),
+                        DataColumn(
+                          label: Text("Delete"),
+                        ),
+                      ],
+                      rows: List.generate(
+                        dataProvider.products.length,
+                        (index) => productDataRow(dataProvider.products[index], edit: () {
                           showAddProductForm(context, dataProvider.products[index]);
                         },
                           delete: () {
                             //TODO: should complete call deleteProduct(compleyte)
                             context.dashBoardProvider.deleteProduct(dataProvider.products[index]);
                           },),
+                      ),
+                    ),
                   ),
                 );
               },
@@ -77,46 +84,82 @@ class ProductListSection extends StatelessWidget {
   }
 }
 
-DataRow productDataRow(Product productInfo,{Function? edit, Function? delete}) {
+DataRow productDataRow(Product productInfo, {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Image.network(
-              productInfo.images?.first.url ?? '',
-              height: 30,
-              width: 30,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Icon(Icons.error);
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(productInfo.name ?? ''),
+            if (productInfo.images != null && productInfo.images!.isNotEmpty)
+              Image.network(
+                productInfo.images!.first.url ?? '',
+                height: 30,
+                width: 30,
+                fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return Icon(Icons.error, size: 30);
+                },
+              )
+            else
+              Icon(Icons.image, size: 30),
+            SizedBox(width: defaultPadding),
+            Flexible(
+              child: Text(
+                productInfo.name ?? '',
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             ),
           ],
         ),
       ),
-      DataCell(Text(productInfo.proCategoryId?.name ?? '')),
-      DataCell(Text(productInfo.proSubCategoryId?.name ?? '')),
-      DataCell(Text('${productInfo.price}'),),
-      DataCell(IconButton(
+      DataCell(
+        Text(
+          productInfo.proCategoryId?.name ?? '',
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
+      DataCell(
+        Text(
+          productInfo.proSubCategoryId?.name ?? '',
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
+      DataCell(
+        Text(
+          '${productInfo.price}',
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      DataCell(
+        IconButton(
           onPressed: () {
             if (edit != null) edit();
           },
           icon: Icon(
             Icons.edit,
             color: Colors.white,
-          ))),
-      DataCell(IconButton(
+          ),
+          constraints: BoxConstraints(),
+          padding: EdgeInsets.zero,
+        ),
+      ),
+      DataCell(
+        IconButton(
           onPressed: () {
             if (delete != null) delete();
           },
           icon: Icon(
             Icons.delete,
             color: Colors.red,
-          ))),
+          ),
+          constraints: BoxConstraints(),
+          padding: EdgeInsets.zero,
+        ),
+      ),
     ],
   );
 }
