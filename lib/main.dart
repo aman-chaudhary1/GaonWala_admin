@@ -80,6 +80,7 @@ import 'utility/constants.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
+
   runApp(
     MultiProvider(
       providers: [
