@@ -1,4 +1,4 @@
-import 'package:admin/screens/order/provider/order_provider.dart';
+import 'package:sazedar_admin/screens/order/provider/order_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'components/order_header.dart';

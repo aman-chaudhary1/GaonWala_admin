@@ -1,4 +1,4 @@
-import 'package:admin/utility/extensions.dart';
+import 'package:sazedar_admin/utility/extensions.dart';
 
 import 'components/notification_header.dart';
 import 'components/notification_list_section.dart';

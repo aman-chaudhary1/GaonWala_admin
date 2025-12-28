@@ -1,4 +1,4 @@
-import 'package:admin/utility/extensions.dart';
+import 'package:sazedar_admin/utility/extensions.dart';
 
 import 'components/add_poster_form.dart';
 import 'components/poster_header.dart';

@@ -1,7 +1,7 @@
 import 'dart:developer' as Console;
 import 'dart:io';
-import 'package:admin/models/api_response.dart';
-import 'package:admin/utility/snack_bar_helper.dart';
+import 'package:sazedar_admin/models/api_response.dart';
+import 'package:sazedar_admin/utility/snack_bar_helper.dart';
 
 import '../../../services/http_services.dart';
 import 'package:flutter/cupertino.dart';

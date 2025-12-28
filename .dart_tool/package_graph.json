@@ -1,14 +1,16 @@
 {
   "roots": [
-    "admin"
+    "sazedar_admin"
   ],
   "packages": [
     {
-      "name": "admin",
+      "name": "sazedar_admin",
       "version": "1.0.0+1",
       "dependencies": [
+        "change_app_package_name",
         "cupertino_icons",
         "dropdown_button2",
+        "firebase_core",
         "fl_chart",
         "flutter",
         "flutter_svg",
@@ -42,6 +44,21 @@
         "test_api",
         "vector_math"
       ]
+    },
+    {
+      "name": "firebase_core",
+      "version": "4.3.0",
+      "dependencies": [
+        "firebase_core_platform_interface",
+        "firebase_core_web",
+        "flutter",
+        "meta"
+      ]
+    },
+    {
+      "name": "change_app_package_name",
+      "version": "1.5.0",
+      "dependencies": []
     },
     {
       "name": "shared_preferences",
@@ -113,7 +130,7 @@
     },
     {
       "name": "image_picker_for_web",
-      "version": "3.0.4",
+      "version": "3.0.6",
       "dependencies": [
         "flutter",
         "flutter_web_plugins",
@@ -253,6 +270,28 @@
       ]
     },
     {
+      "name": "firebase_core_web",
+      "version": "3.3.1",
+      "dependencies": [
+        "firebase_core_platform_interface",
+        "flutter",
+        "flutter_web_plugins",
+        "meta",
+        "web"
+      ]
+    },
+    {
+      "name": "firebase_core_platform_interface",
+      "version": "6.0.2",
+      "dependencies": [
+        "collection",
+        "flutter",
+        "flutter_test",
+        "meta",
+        "plugin_platform_interface"
+      ]
+    },
+    {
       "name": "shared_preferences_windows",
       "version": "2.4.1",
       "dependencies": [
@@ -384,7 +423,7 @@
     },
     {
       "name": "web",
-      "version": "0.5.1",
+      "version": "1.1.1",
       "dependencies": []
     },
     {
@@ -427,7 +466,7 @@
     },
     {
       "name": "http",
-      "version": "1.2.1",
+      "version": "1.6.0",
       "dependencies": [
         "async",
         "http_parser",
@@ -529,6 +568,13 @@
       ]
     },
     {
+      "name": "plugin_platform_interface",
+      "version": "2.1.8",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
       "name": "path_provider_windows",
       "version": "2.2.1",
       "dependencies": [
@@ -554,13 +600,6 @@
       "dependencies": [
         "meta",
         "path"
-      ]
-    },
-    {
-      "name": "plugin_platform_interface",
-      "version": "2.1.8",
-      "dependencies": [
-        "meta"
       ]
     },
     {
@@ -595,7 +634,7 @@
     },
     {
       "name": "cross_file",
-      "version": "0.3.4+1",
+      "version": "0.3.5+1",
       "dependencies": [
         "meta",
         "web"

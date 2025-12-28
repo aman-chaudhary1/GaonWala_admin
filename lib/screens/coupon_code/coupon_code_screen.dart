@@ -1,4 +1,4 @@
-import 'package:admin/utility/extensions.dart';
+import 'package:sazedar_admin/utility/extensions.dart';
 
 import 'components/coupon_code_header.dart';
 import 'components/coupon_list_section.dart';

@@ -1,4 +1,4 @@
-import 'package:admin/utility/extensions.dart';
+import 'package:sazedar_admin/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/data/data_provider.dart';

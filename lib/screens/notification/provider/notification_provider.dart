@@ -1,7 +1,7 @@
 import 'dart:developer';
-import 'package:admin/models/api_response.dart';
-import 'package:admin/models/my_notification.dart';
-import 'package:admin/utility/snack_bar_helper.dart';
+import 'package:sazedar_admin/models/api_response.dart';
+import 'package:sazedar_admin/models/my_notification.dart';
+import 'package:sazedar_admin/utility/snack_bar_helper.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 
 import '../../../models/notification_result.dart';
