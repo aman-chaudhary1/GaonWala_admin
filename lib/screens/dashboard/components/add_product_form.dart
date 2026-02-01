@@ -228,6 +228,7 @@ class ProductSubmitForm extends StatelessWidget {
                 ],
               ),
               SizedBox(height: defaultPadding),
+              SizedBox(height: defaultPadding),
               Row(
                 children: [
                   Expanded(
@@ -264,6 +265,40 @@ class ProductSubmitForm extends StatelessWidget {
                         }
                         return null;
                       },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: defaultPadding),
+              Row(
+                children: [
+                  Expanded(
+                    child: Consumer<DashBoardProvider>(
+                      builder: (context, dashProvider, child) {
+                        return DropdownButtonFormField<String>(
+                          value: dashProvider.selectedUnit,
+                          decoration: InputDecoration(labelText: 'Unit'),
+                          items: ['kg', 'gm', 'ltr', 'pc']
+                              .map((unit) => DropdownMenuItem(
+                                    value: unit,
+                                    child: Text(unit),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            dashProvider.selectedUnit = value;
+                            dashProvider.updateUI();
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(width: defaultPadding),
+                  Expanded(
+                    child: CustomTextField(
+                      controller: context.dashBoardProvider.productSizeCtrl,
+                      labelText: 'Product Size (e.g., 400 for 400gm)',
+                      inputType: TextInputType.number,
+                      onSave: (val) {},
                     ),
                   ),
                 ],

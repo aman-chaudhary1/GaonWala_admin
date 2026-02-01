@@ -1,0 +1,33 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "sazedar-admin-45cfb",
+          "appId": "1:838925430468:android:b2a80766566d4574182391",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "sazedar-admin-45cfb",
+          "configurations": {
+            "android": "1:838925430468:android:b2a80766566d4574182391",
+            "ios": "1:838925430468:ios:88b05778439baa2a182391",
+            "macos": "1:838925430468:ios:97bd3b4f292b6d39182391",
+            "web": "1:838925430468:web:81953f3aaacef527182391",
+            "windows": "1:838925430468:web:643dd5f212e69ef0182391"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

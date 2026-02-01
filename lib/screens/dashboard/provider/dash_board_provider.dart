@@ -25,6 +25,7 @@ class DashBoardProvider extends ChangeNotifier {
   TextEditingController productQntCtrl = TextEditingController();
   TextEditingController productPriceCtrl = TextEditingController();
   TextEditingController productOffPriceCtrl = TextEditingController();
+  TextEditingController productSizeCtrl = TextEditingController();
 
   //? dropdown value
   Category? selectedCategory;
@@ -32,6 +33,7 @@ class DashBoardProvider extends ChangeNotifier {
   Brand? selectedBrand;
   VariantType? selectedVariantType;
   List<String> selectedVariants = [];
+  String? selectedUnit = 'kg'; // Default unit
   bool isTodaysSpecial = false;
 
   Product? productForUpdate;
@@ -76,6 +78,8 @@ class DashBoardProvider extends ChangeNotifier {
         'proVariantTypeId': selectedVariantType?.sId ?? '',
         'proVariantId': selectedVariants,
         'todaysSpecial': isTodaysSpecial.toString(),
+        'unit': selectedUnit ?? 'kg',
+        'productSize': productSizeCtrl.text,
       };
       final FormData form = await createFormDataForMultipleImage(imgXFiles: [
         {'image1': mainImgXFile},
@@ -127,6 +131,8 @@ class DashBoardProvider extends ChangeNotifier {
         'proVariantTypeId': selectedVariantType?.sId ?? '',
         'proVariantId': selectedVariants,
         'todaysSpecial': isTodaysSpecial.toString(),
+        'unit': selectedUnit ?? 'kg',
+        'productSize': productSizeCtrl.text,
       };
 
       final FormData form = await createFormDataForMultipleImage(
@@ -303,6 +309,8 @@ class DashBoardProvider extends ChangeNotifier {
       productPriceCtrl.text = product.price.toString();
       productOffPriceCtrl.text = '${product.offerPrice}';
       productQntCtrl.text = '${product.quantity}';
+      productSizeCtrl.text = '${product.productSize}';
+      selectedUnit = product.unit ?? 'kg';
 
       selectedCategory = _dataProvider.categories.firstWhereOrNull(
           (element) => element.sId == product.proCategoryId?.sId);
@@ -346,6 +354,7 @@ class DashBoardProvider extends ChangeNotifier {
     productPriceCtrl.clear();
     productOffPriceCtrl.clear();
     productQntCtrl.clear();
+    productSizeCtrl.clear();
 
     selectedMainImage = null;
     selectedSecondImage = null;
@@ -363,6 +372,7 @@ class DashBoardProvider extends ChangeNotifier {
     selectedSubCategory = null;
     selectedBrand = null;
     selectedVariantType = null;
+    selectedUnit = 'kg';
     selectedVariants = [];
     isTodaysSpecial = false;
 

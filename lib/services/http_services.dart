@@ -20,10 +20,15 @@ class HttpService {
     try {
       final response =
           await GetConnect().post('$baseUrl/$endpointUrl', itemData);
-      print(response.body);
+      print('Status Code: ${response.statusCode}');
+      print('Body String: ${response.bodyString}'); 
+      // Safe access
+      if (response.body == null) {
+         print('Warning: Response body is null');
+      }
       return response;
     } catch (e) {
-      print('Error: $e');
+      print('Error in addItem: $e');
       return Response(
           body: json.encode({'message': e.toString()}), statusCode: 500);
     }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "838925430468",
+    "project_id": "sazedar-admin-45cfb",
+    "storage_bucket": "sazedar-admin-45cfb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838925430468:android:b2a80766566d4574182391",
+        "android_client_info": {
+          "package_name": "com.sazedar.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4iIKc4h_fz7VEXqJ4x3U68eMwwE8FrVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,6 +12,8 @@ class Product {
   List<String>? proVariantId;
   List<Images>? images;
   bool? todaysSpecial;
+  String? unit;
+  double? productSize;
   String? createdAt;
   String? updatedAt;
   int? iV;
@@ -30,6 +32,8 @@ class Product {
         this.proVariantId,
         this.images,
         this.todaysSpecial,
+        this.unit,
+        this.productSize,
         this.createdAt,
         this.updatedAt,
         this.iV});
@@ -39,8 +43,8 @@ class Product {
     name = json['name'];
     description = json['description'];
     quantity = json['quantity'];
-    price = json['price']?.toDouble();;
-    offerPrice = json['offerPrice']?.toDouble();;
+    price = json['price']?.toDouble();
+    offerPrice = json['offerPrice']?.toDouble();
     proCategoryId = json['proCategoryId'] != null
         ? new ProRef.fromJson(json['proCategoryId'])
         : null;
@@ -61,6 +65,8 @@ class Product {
       });
     }
     todaysSpecial = json['todaysSpecial'];
+    unit = json['unit'];
+    productSize = json['productSize']?.toDouble();
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
@@ -91,6 +97,8 @@ class Product {
       data['images'] = this.images!.map((v) => v.toJson()).toList();
     }
     data['todaysSpecial'] = this.todaysSpecial;
+    data['unit'] = this.unit;
+    data['productSize'] = this.productSize;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
