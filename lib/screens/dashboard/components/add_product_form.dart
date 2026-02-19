@@ -13,15 +13,25 @@ import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/product_image_card.dart';
 
-class ProductSubmitForm extends StatelessWidget {
+class ProductSubmitForm extends StatefulWidget {
   final Product? product;
 
   const ProductSubmitForm({super.key, this.product});
 
   @override
+  State<ProductSubmitForm> createState() => _ProductSubmitFormState();
+}
+
+class _ProductSubmitFormState extends State<ProductSubmitForm> {
+  @override
+  void initState() {
+    super.initState();
+    context.dashBoardProvider.setDataForUpdateProduct(widget.product);
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    context.dashBoardProvider.setDataForUpdateProduct(product);
     return SingleChildScrollView(
       child: Form(
         key: context.dashBoardProvider.addProductFormKey,
@@ -46,7 +56,7 @@ class ProductSubmitForm extends StatelessWidget {
                         labelText: 'Main Image',
                         imageFile: dashProvider.selectedMainImage,
                         imageUrlForUpdateImage:
-                            product?.images.safeElementAt(0)?.url,
+                            widget.product?.images.safeElementAt(0)?.url,
                         onTap: () {
                           dashProvider.pickImage(imageCardNumber: 1);
                         },
@@ -63,7 +73,7 @@ class ProductSubmitForm extends StatelessWidget {
                         labelText: 'Second image',
                         imageFile: dashProvider.selectedSecondImage,
                         imageUrlForUpdateImage:
-                            product?.images.safeElementAt(1)?.url,
+                            widget.product?.images.safeElementAt(1)?.url,
                         onTap: () {
                           dashProvider.pickImage(imageCardNumber: 2);
                         },
@@ -80,7 +90,7 @@ class ProductSubmitForm extends StatelessWidget {
                         labelText: 'Third image',
                         imageFile: dashProvider.selectedThirdImage,
                         imageUrlForUpdateImage:
-                            product?.images.safeElementAt(2)?.url,
+                            widget.product?.images.safeElementAt(2)?.url,
                         onTap: () {
                           dashProvider.pickImage(imageCardNumber: 3);
                         },
@@ -97,7 +107,7 @@ class ProductSubmitForm extends StatelessWidget {
                         labelText: 'Fourth image',
                         imageFile: dashProvider.selectedFourthImage,
                         imageUrlForUpdateImage:
-                            product?.images.safeElementAt(3)?.url,
+                            widget.product?.images.safeElementAt(3)?.url,
                         onTap: () {
                           dashProvider.pickImage(imageCardNumber: 4);
                         },
@@ -114,7 +124,7 @@ class ProductSubmitForm extends StatelessWidget {
                         labelText: 'Fifth image',
                         imageFile: dashProvider.selectedFifthImage,
                         imageUrlForUpdateImage:
-                            product?.images.safeElementAt(4)?.url,
+                            widget.product?.images.safeElementAt(4)?.url,
                         onTap: () {
                           dashProvider.pickImage(imageCardNumber: 5);
                         },
@@ -191,12 +201,6 @@ class ProductSubmitForm extends StatelessWidget {
                             context.dashBoardProvider.filterBrand(newValue);
                           }
                         },
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select sub category';
-                          }
-                          return null;
-                        },
                       );
                     },
                   )),
@@ -215,12 +219,6 @@ class ProductSubmitForm extends StatelessWidget {
                                 dashProvider.selectedBrand = newValue;
                                 dashProvider.updateUI();
                               }
-                            },
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Please brand';
-                              }
-                              return null;
                             });
                       },
                     ),
@@ -278,7 +276,16 @@ class ProductSubmitForm extends StatelessWidget {
                         return DropdownButtonFormField<String>(
                           value: dashProvider.selectedUnit,
                           decoration: InputDecoration(labelText: 'Unit'),
-                          items: ['kg', 'gm', 'ltr', 'pc']
+                          items: [
+                            'kg',
+                            'gm',
+                            'ltr',
+                            'ml',
+                            'pc',
+                            'Half Plate',
+                            'Full Plate',
+                            'Other'
+                          ]
                               .map((unit) => DropdownMenuItem(
                                     value: unit,
                                     child: Text(unit),
@@ -301,19 +308,50 @@ class ProductSubmitForm extends StatelessWidget {
                       onSave: (val) {},
                     ),
                   ),
+                  if (context.watch<DashBoardProvider>().selectedUnit ==
+                      'Other') ...[
+                    SizedBox(width: defaultPadding),
+                    Expanded(
+                      child: CustomTextField(
+                        controller: context.dashBoardProvider.customUnitCtrl,
+                        labelText: 'Custom Unit',
+                        inputType: TextInputType.text,
+                        onSave: (val) {},
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter unit';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ]
                 ],
               ),
               SizedBox(height: defaultPadding),
               Consumer<DashBoardProvider>(
                 builder: (context, dashProvider, child) {
-                  return CheckboxListTile(
-                    title: Text('Today\'s Special'),
-                    value: dashProvider.isTodaysSpecial,
-                    onChanged: (bool? value) {
-                      dashProvider.isTodaysSpecial = value ?? false;
-                      dashProvider.updateUI();
-                    },
-                    activeColor: primaryColor,
+                  return Column(
+                    children: [
+                      CheckboxListTile(
+                        title: Text('Today\'s Special'),
+                        value: dashProvider.isTodaysSpecial,
+                        onChanged: (bool? value) {
+                          dashProvider.isTodaysSpecial = value ?? false;
+                          dashProvider.updateUI();
+                        },
+                        activeColor: primaryColor,
+                      ),
+                      CheckboxListTile(
+                        title: Text('Is Available'),
+                        value: dashProvider.isAvailable,
+                        onChanged: (bool? value) {
+                          dashProvider.isAvailable = value ?? true;
+                          dashProvider.updateUI();
+                        },
+                        activeColor: primaryColor,
+                      ),
+                    ],
                   );
                 },
               ),

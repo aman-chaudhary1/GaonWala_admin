@@ -14,6 +14,7 @@ import '../../../models/category.dart';
 import '../../models/brand.dart';
 import '../../models/sub_category.dart';
 import '../../models/variant.dart';
+import '../../models/user.dart';
 
 class DataProvider extends ChangeNotifier {
   HttpService service = HttpService();
@@ -68,6 +69,10 @@ class DataProvider extends ChangeNotifier {
 
   List<MyNotification> get notifications => _filteredNotifications;
 
+  List<User> _allUsers = [];
+  List<User> _filteredUsers = [];
+  List<User> get users => _filteredUsers;
+
   DataProvider() {
     getAllProduct();
     getAllCategory();
@@ -79,6 +84,7 @@ class DataProvider extends ChangeNotifier {
     getAllCoupons();
     getAllOrders();
     getAllNotifications();
+    getAllUsers();
   }
 
   //TODO: should complete getAllCategory(complete)
@@ -532,4 +538,40 @@ class DataProvider extends ChangeNotifier {
     }
     return totalProduct;
   }
+
+  // Get All Users
+  Future<List<User>> getAllUsers({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'users');
+      if (response.isOk) {
+        ApiResponse<List<User>> apiResponse = ApiResponse<List<User>>.fromJson(
+            response.body,
+            (json) =>
+                (json as List).map((item) => User.fromJson(item)).toList());
+        _allUsers = apiResponse.data ?? [];
+        _filteredUsers = List.from(_allUsers);
+        notifyListeners();
+        if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      }
+    } catch (e) {
+      SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredUsers;
+  }
+
+  // Filter Users
+  void filterUsers(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredUsers = List.from(_allUsers);
+    } else {
+      final lowerKeyword = keyword.toLowerCase();
+      _filteredUsers = _allUsers.where((user) {
+        return (user.name ?? '').toLowerCase().contains(lowerKeyword) || 
+               (user.email ?? '').toLowerCase().contains(lowerKeyword);
+      }).toList();
+    }
+    notifyListeners();
+  }
+
 }

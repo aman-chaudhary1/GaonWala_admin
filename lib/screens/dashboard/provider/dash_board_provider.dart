@@ -26,6 +26,7 @@ class DashBoardProvider extends ChangeNotifier {
   TextEditingController productPriceCtrl = TextEditingController();
   TextEditingController productOffPriceCtrl = TextEditingController();
   TextEditingController productSizeCtrl = TextEditingController();
+  TextEditingController customUnitCtrl = TextEditingController();
 
   //? dropdown value
   Category? selectedCategory;
@@ -35,6 +36,7 @@ class DashBoardProvider extends ChangeNotifier {
   List<String> selectedVariants = [];
   String? selectedUnit = 'kg'; // Default unit
   bool isTodaysSpecial = false;
+  bool isAvailable = true;
 
   Product? productForUpdate;
   File? selectedMainImage,
@@ -78,7 +80,8 @@ class DashBoardProvider extends ChangeNotifier {
         'proVariantTypeId': selectedVariantType?.sId ?? '',
         'proVariantId': selectedVariants,
         'todaysSpecial': isTodaysSpecial.toString(),
-        'unit': selectedUnit ?? 'kg',
+        'isAvailable': isAvailable.toString(),
+        'unit': selectedUnit == 'Other' ? customUnitCtrl.text : selectedUnit ?? 'kg',
         'productSize': productSizeCtrl.text,
       };
       final FormData form = await createFormDataForMultipleImage(imgXFiles: [
@@ -131,8 +134,10 @@ class DashBoardProvider extends ChangeNotifier {
         'proVariantTypeId': selectedVariantType?.sId ?? '',
         'proVariantId': selectedVariants,
         'todaysSpecial': isTodaysSpecial.toString(),
-        'unit': selectedUnit ?? 'kg',
-        'productSize': productSizeCtrl.text,
+        'isAvailable': isAvailable.toString(),
+        'unit': selectedUnit == 'Other' ? customUnitCtrl.text : selectedUnit ?? 'kg',
+        'unit': selectedUnit == 'Other' ? customUnitCtrl.text : selectedUnit ?? 'kg',
+        'productSize': productSizeCtrl.text.isEmpty ? '' : productSizeCtrl.text,
       };
 
       final FormData form = await createFormDataForMultipleImage(
@@ -309,8 +314,16 @@ class DashBoardProvider extends ChangeNotifier {
       productPriceCtrl.text = product.price.toString();
       productOffPriceCtrl.text = '${product.offerPrice}';
       productQntCtrl.text = '${product.quantity}';
-      productSizeCtrl.text = '${product.productSize}';
-      selectedUnit = product.unit ?? 'kg';
+      productQntCtrl.text = '${product.quantity}';
+      productSizeCtrl.text = (product.productSize != null) ? '${product.productSize}' : '';
+      
+      const standardUnits = ['kg', 'gm', 'ltr', 'ml', 'pc', 'Half Plate', 'Full Plate', 'Other'];
+      if (standardUnits.contains(product.unit)) {
+         selectedUnit = product.unit;
+      } else {
+         selectedUnit = 'Other';
+         customUnitCtrl.text = product.unit ?? '';
+      }
 
       selectedCategory = _dataProvider.categories.firstWhereOrNull(
           (element) => element.sId == product.proCategoryId?.sId);
@@ -343,6 +356,7 @@ class DashBoardProvider extends ChangeNotifier {
       variantsByVariantType = variantNames;
       selectedVariants = product.proVariantId ?? [];
       isTodaysSpecial = product.todaysSpecial ?? false;
+      isAvailable = product.isAvailable ?? true;
     } else {
       clearFields();
     }
@@ -355,6 +369,7 @@ class DashBoardProvider extends ChangeNotifier {
     productOffPriceCtrl.clear();
     productQntCtrl.clear();
     productSizeCtrl.clear();
+    customUnitCtrl.clear();
 
     selectedMainImage = null;
     selectedSecondImage = null;
@@ -375,6 +390,7 @@ class DashBoardProvider extends ChangeNotifier {
     selectedUnit = 'kg';
     selectedVariants = [];
     isTodaysSpecial = false;
+    isAvailable = true;
 
     productForUpdate = null;
 

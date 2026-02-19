@@ -5,6 +5,7 @@ import 'package:sazedar_admin/utility/snack_bar_helper.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 
 import '../../../models/notification_result.dart';
+import '../../../models/user.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../core/data/data_provider.dart';
 import '../../../services/http_services.dart';
@@ -19,6 +20,8 @@ class NotificationProvider extends ChangeNotifier {
   TextEditingController descriptionCtrl = TextEditingController();
   TextEditingController imageUrlCtrl = TextEditingController();
 
+  User? selectedUser;
+  
   NotificationResult? notificationResult;
 
   NotificationProvider(this._dataProvider);
@@ -30,6 +33,7 @@ class NotificationProvider extends ChangeNotifier {
         "title": titleCtrl.text,
         "description": descriptionCtrl.text,
         "imageUrl": imageUrlCtrl.text,
+        if (selectedUser != null) "userId": selectedUser?.sId,
       };
       final response = await service.addItem(
           endpointUrl: 'notification/send-notification',
@@ -122,6 +126,8 @@ class NotificationProvider extends ChangeNotifier {
     titleCtrl.clear();
     descriptionCtrl.clear();
     imageUrlCtrl.clear();
+    selectedUser = null;
+    notifyListeners();
   }
 
   updateUI() {

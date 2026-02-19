@@ -5,13 +5,14 @@ class Product {
   int? quantity;
   double? price;
   double? offerPrice;
+  bool? todaysSpecial;
+  bool? isAvailable;
   ProRef? proCategoryId;
   ProRef? proSubCategoryId;
   ProRef? proBrandId;
   ProTypeRef? proVariantTypeId;
   List<String>? proVariantId;
   List<Images>? images;
-  bool? todaysSpecial;
   String? unit;
   double? productSize;
   String? createdAt;
@@ -25,13 +26,14 @@ class Product {
         this.quantity,
         this.price,
         this.offerPrice,
+        this.todaysSpecial,
+        this.isAvailable,
         this.proCategoryId,
         this.proSubCategoryId,
         this.proBrandId,
         this.proVariantTypeId,
         this.proVariantId,
         this.images,
-        this.todaysSpecial,
         this.unit,
         this.productSize,
         this.createdAt,
@@ -45,6 +47,8 @@ class Product {
     quantity = json['quantity'];
     price = json['price']?.toDouble();
     offerPrice = json['offerPrice']?.toDouble();
+    todaysSpecial = json['todaysSpecial'];
+    isAvailable = json['isAvailable'];
     proCategoryId = json['proCategoryId'] != null
         ? new ProRef.fromJson(json['proCategoryId'])
         : null;
@@ -64,7 +68,6 @@ class Product {
         images!.add(new Images.fromJson(v));
       });
     }
-    todaysSpecial = json['todaysSpecial'];
     unit = json['unit'];
     productSize = json['productSize']?.toDouble();
     createdAt = json['createdAt'];
@@ -80,6 +83,8 @@ class Product {
     data['quantity'] = this.quantity;
     data['price'] = this.price;
     data['offerPrice'] = this.offerPrice;
+    data['todaysSpecial'] = this.todaysSpecial;
+    data['isAvailable'] = this.isAvailable;
     if (this.proCategoryId != null) {
       data['proCategoryId'] = this.proCategoryId!.toJson();
     }

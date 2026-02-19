@@ -75,10 +75,13 @@ import 'screens/posters/provider/poster_provider.dart';
 import 'screens/order/provider/order_provider.dart';
 import 'screens/notification/provider/notification_provider.dart';
 import 'screens/login/provider/login_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'utility/constants.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
 
   runApp(

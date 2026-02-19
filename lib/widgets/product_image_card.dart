@@ -25,15 +25,15 @@ class ProductImageCard extends StatelessWidget {
       alignment: Alignment.topRight,
       children: [
         Card(
-          child: Container(
-            height: 130,
-            width: size.width * 0.12,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.grey[200],
-            ),
-            child: GestureDetector(
-              onTap: onTap,
+          clipBehavior: Clip.hardEdge,
+          child: InkWell(
+            onTap: onTap,
+            child: Container(
+              height: 130,
+              width: size.width * 0.12,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -42,17 +42,17 @@ class ProductImageCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       child: kIsWeb
                           ? Image.network(
-                        imageFile?.path ?? '',
-                        width: double.infinity,
-                        height: 80,
-                        fit: BoxFit.scaleDown,
-                      )
+                              imageFile?.path ?? '',
+                              width: double.infinity,
+                              height: 80,
+                              fit: BoxFit.scaleDown,
+                            )
                           : Image.file(
-                        imageFile!,
-                        width: double.infinity,
-                        height: 80,
-                        fit: BoxFit.scaleDown,
-                      ),
+                              imageFile!,
+                              width: double.infinity,
+                              height: 80,
+                              fit: BoxFit.scaleDown,
+                            ),
                     )
                   else if (imageUrlForUpdateImage != null)
                     ClipRRect(

@@ -11,7 +11,9 @@ class ApiResponse<T> {
       ) =>
       ApiResponse(
         success: json['success'] as bool,
-        message: json['message'] as String,
+        message: (json['message'] is String)
+            ? json['message']
+            : json['message'].toString(),
         data: (json['data'] != null && fromJsonT != null)
             ? fromJsonT(json['data'])
             : null,

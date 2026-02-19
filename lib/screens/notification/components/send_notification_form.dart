@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../../utility/constants.dart';
 import '../../../widgets/custom_text_field.dart';
+import 'package:provider/provider.dart';
+import '../../../core/data/data_provider.dart';
+import '../../../models/user.dart';
 
 class SendNotificationForm extends StatelessWidget {
   const SendNotificationForm({super.key});
@@ -23,6 +26,36 @@ class SendNotificationForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Gap(defaultPadding),
+              Consumer<DataProvider>(
+                builder: (context, dataProvider, child) {
+                  return DropdownButtonFormField<User?>(
+                    value: context.notificationProvider.selectedUser,
+                    hint: const Text('Select User (Default: All Users)'),
+                    isExpanded: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Target User',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: [
+                      const DropdownMenuItem<User?>(
+                        value: null,
+                        child: Text('All Users'),
+                      ),
+                      ...dataProvider.users.map((User user) {
+                        return DropdownMenuItem<User?>(
+                          value: user,
+                          child: Text(user.name ?? 'Unknown User (${user.email})'),
+                        );
+                      }),
+                    ],
+                    onChanged: (User? newValue) {
+                      context.notificationProvider.selectedUser = newValue;
+                      context.notificationProvider.updateUI();
+                    },
+                  );
+                },
+              ),
               Gap(defaultPadding),
               CustomTextField(
                 controller: context.notificationProvider.titleCtrl,

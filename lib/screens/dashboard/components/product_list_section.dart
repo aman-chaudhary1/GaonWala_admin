@@ -56,6 +56,12 @@ class ProductListSection extends StatelessWidget {
                           label: Text("Price"),
                         ),
                         DataColumn(
+                          label: Text("Stock"),
+                        ),
+                        DataColumn(
+                          label: Text("Status"),
+                        ),
+                        DataColumn(
                           label: Text("Edit"),
                         ),
                         DataColumn(
@@ -131,6 +137,22 @@ DataRow productDataRow(Product productInfo, {Function? edit, Function? delete}) 
       DataCell(
         Text(
           '${productInfo.price}',
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      DataCell(
+        Text(
+          '${productInfo.quantity}',
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      DataCell(
+        Text(
+          (productInfo.isAvailable ?? true) ? 'Available' : 'Unavailable',
+          style: TextStyle(
+            color: (productInfo.isAvailable ?? true) ? Colors.green : Colors.red,
+            fontWeight: FontWeight.bold,
+          ),
           overflow: TextOverflow.ellipsis,
         ),
       ),
