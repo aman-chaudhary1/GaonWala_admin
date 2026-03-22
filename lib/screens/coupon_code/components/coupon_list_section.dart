@@ -105,7 +105,7 @@ DataRow couponDataRow(Coupon coupon, int index, {Function? edit, Function? delet
       ),
       DataCell(Text(coupon.status ?? '')),
       DataCell(Text(coupon.discountType ?? '')),
-      DataCell(Text('${coupon.discountAmount}' ?? '')),
+      DataCell(Text('Rs ${coupon.discountAmount}' ?? '')),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

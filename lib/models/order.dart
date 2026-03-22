@@ -83,37 +83,37 @@ class Order {
 
 class ShippingAddress {
   String? phone;
-  String? street;
-  String? city;
-  String? state;
-  String? postalCode;
-  String? country;
+  String? landmark;
+  String? village;
+  String? panchayat;
+  String? block;
+  double? deliveryFee;
 
   ShippingAddress(
       {this.phone,
-        this.street,
-        this.city,
-        this.state,
-        this.postalCode,
-        this.country});
+        this.landmark,
+        this.village,
+        this.panchayat,
+        this.block,
+        this.deliveryFee});
 
   ShippingAddress.fromJson(Map<String, dynamic> json) {
     phone = json['phone'];
-    street = json['street'];
-    city = json['city'];
-    state = json['state'];
-    postalCode = json['postalCode'];
-    country = json['country'];
+    landmark = json['landmark'];
+    village = json['village'];
+    panchayat = json['panchayat'];
+    block = json['block'];
+    deliveryFee = json['deliveryFee']?.toDouble();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['phone'] = this.phone;
-    data['street'] = this.street;
-    data['city'] = this.city;
-    data['state'] = this.state;
-    data['postalCode'] = this.postalCode;
-    data['country'] = this.country;
+    data['landmark'] = this.landmark;
+    data['village'] = this.village;
+    data['panchayat'] = this.panchayat;
+    data['block'] = this.block;
+    data['deliveryFee'] = this.deliveryFee;
     return data;
   }
 }
@@ -121,13 +121,15 @@ class ShippingAddress {
 class OrderTotal {
   double? subtotal;
   double? discount;
+  double? shipping;
   double? total;
 
-  OrderTotal({this.subtotal, this.discount, this.total});
+  OrderTotal({this.subtotal, this.discount, this.shipping, this.total});
 
   OrderTotal.fromJson(Map<String, dynamic> json) {
     subtotal = json['subtotal']?.toDouble();
     discount = json['discount']?.toDouble();
+    shipping = json['shipping']?.toDouble();
     total = json['total']?.toDouble();
   }
 
@@ -135,6 +137,7 @@ class OrderTotal {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['subtotal'] = this.subtotal;
     data['discount'] = this.discount;
+    data['shipping'] = this.shipping;
     data['total'] = this.total;
     return data;
   }
@@ -166,6 +169,7 @@ class Items {
   double? price;
   String? variant;
   String? sId;
+  String? unit;
 
   Items(
       {this.productID,
@@ -173,7 +177,8 @@ class Items {
         this.quantity,
         this.price,
         this.variant,
-        this.sId});
+        this.sId,
+        this.unit});
 
   Items.fromJson(Map<String, dynamic> json) {
     productID = json['productID'];
@@ -182,6 +187,7 @@ class Items {
     price = json['price']?.toDouble();
     variant = json['variant'];
     sId = json['_id'];
+    unit = json['unit'];
   }
 
   Map<String, dynamic> toJson() {
@@ -192,6 +198,7 @@ class Items {
     data['price'] = this.price;
     data['variant'] = this.variant;
     data['_id'] = this.sId;
+    data['unit'] = this.unit;
     return data;
   }
 }

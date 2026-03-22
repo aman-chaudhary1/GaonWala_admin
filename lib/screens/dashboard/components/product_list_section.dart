@@ -112,7 +112,7 @@ DataRow productDataRow(Product productInfo, {Function? edit, Function? delete}) 
             SizedBox(width: defaultPadding),
             Flexible(
               child: Text(
-                productInfo.name ?? '',
+                '${productInfo.name ?? ''}${productInfo.unit != null && productInfo.unit!.isNotEmpty ? ' (${productInfo.unit})' : ''}',
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
@@ -136,7 +136,7 @@ DataRow productDataRow(Product productInfo, {Function? edit, Function? delete}) 
       ),
       DataCell(
         Text(
-          '${productInfo.price}',
+          'Rs ${productInfo.price}',
           overflow: TextOverflow.ellipsis,
         ),
       ),

@@ -29,8 +29,8 @@ class CouponCodeProvider extends ChangeNotifier {
 
   CouponCodeProvider(this._dataProvider);
 
-  //TODO: should complete addCoupon
-addCoupon() async {
+  // Add a new coupon
+  addCoupon() async {
 
     try {
 if(endDateCtrl.text.isEmpty){
@@ -40,8 +40,8 @@ if(endDateCtrl.text.isEmpty){
         Map<String, dynamic> coupon = {
         'couponCode': couponCodeCtrl.text,
         'discountType': selectedDiscountType,
-        'discountAmount': discountAmountCtrl.text,
-        'minimumPurchaseAmount':minimumPurchaseAmountCtrl.text,
+        'discountAmount': double.tryParse(discountAmountCtrl.text) ?? 0.0,
+        'minimumPurchaseAmount': double.tryParse(minimumPurchaseAmountCtrl.text) ?? 0.0,
         'endDate': endDateCtrl.text,
         'status': selectedCouponStatus,
         'applicableCategory': selectedCategory?.sId,
@@ -71,8 +71,8 @@ if(endDateCtrl.text.isEmpty){
 
   }
 
-  //TODO: should complete updateCoupon
-updateCoupon() async {
+  // Update an existing coupon
+  updateCoupon() async {
     if (couponForUpdate != null) {
      
     
@@ -81,8 +81,8 @@ updateCoupon() async {
       Map<String, dynamic> coupon = {
         'couponCode': couponCodeCtrl.text,
         'discountType': selectedDiscountType,
-        'discountAmount': discountAmountCtrl.text,
-        'minimumPurchaseAmount': minimumPurchaseAmountCtrl.text,
+        'discountAmount': double.tryParse(discountAmountCtrl.text) ?? 0.0,
+        'minimumPurchaseAmount': double.tryParse(minimumPurchaseAmountCtrl.text) ?? 0.0,
         'endDate': endDateCtrl.text,
         'status': selectedCouponStatus,
         'applicableCategory': selectedCategory?.sId,
@@ -116,8 +116,8 @@ updateCoupon() async {
   }
 }
 
-  //TODO: should complete submitCoupon
-submitCoupon() {
+  // Submit coupon (logic to decide between add or update)
+  submitCoupon() {
     if (addCouponFormKey.currentState!.validate()) {
       if (couponForUpdate == null) {
         addCoupon();
@@ -127,8 +127,8 @@ submitCoupon() {
     }
   }
 
-  //TODO: should complete deleteCoupon
-deleteCoupon(Coupon coupon) async {
+  // Delete a coupon
+  deleteCoupon(Coupon coupon) async {
     try {
       Response response = await service.deleteItem(
         endpointUrl: 'couponCodes',
@@ -183,6 +183,13 @@ deleteCoupon(Coupon coupon) async {
     discountAmountCtrl.text = '';
     minimumPurchaseAmountCtrl.text = '';
     endDateCtrl.text = '';
+  }
+
+  clearRestrictions() {
+    selectedCategory = null;
+    selectedSubCategory = null;
+    selectedProduct = null;
+    notifyListeners();
   }
 
   updateUi() {

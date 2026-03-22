@@ -96,7 +96,7 @@ class CouponSubmitForm extends StatelessWidget {
                       onSave: (val) {},
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please select status';
+                          return 'Please enter minimum purchase amount';
                         }
                         return null;
                       },
@@ -141,13 +141,30 @@ class CouponSubmitForm extends StatelessWidget {
                 ],
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Applicable Restrictions (Optional)",
+                    style: TextStyle(fontWeight: FontWeight.bold, color: primaryColor),
+                  ),
+                  TextButton.icon(
+                    onPressed: () {
+                      context.couponCodeProvider.clearRestrictions();
+                    },
+                    icon: Icon(Icons.clear_all, size: 18),
+                    label: Text('Clear All'),
+                  ),
+                ],
+              ),
+              Row(
                 children: [
                   Expanded(
                     child: Consumer<CouponCodeProvider>(
                       builder: (context, couponProvider, child) {
                         return CustomDropdown(
+                          key: ValueKey('cat_${couponProvider.selectedCategory?.sId}'),
                           initialValue: couponProvider.selectedCategory,
-                          hintText: couponProvider.selectedCategory?.name ?? 'Select category',
+                          hintText: 'Category (Optional)',
                           items: context.dataProvider.categories,
                           displayItem: (Category? category) => category?.name ?? '',
                           onChanged: (newValue) {
@@ -166,8 +183,9 @@ class CouponSubmitForm extends StatelessWidget {
                     child: Consumer<CouponCodeProvider>(
                       builder: (context, couponProvider, child) {
                         return CustomDropdown(
+                          key: ValueKey('sub_${couponProvider.selectedSubCategory?.sId}'),
                           initialValue: couponProvider.selectedSubCategory,
-                          hintText: couponProvider.selectedSubCategory?.name ?? 'Select sub category',
+                          hintText: 'Sub Category (Optional)',
                           items: context.dataProvider.subCategories,
                           displayItem: (SubCategory? subCategory) => subCategory?.name ?? '',
                           onChanged: (newValue) {
@@ -186,8 +204,9 @@ class CouponSubmitForm extends StatelessWidget {
                     child: Consumer<CouponCodeProvider>(
                       builder: (context, couponProvider, child) {
                         return CustomDropdown(
+                          key: ValueKey('pro_${couponProvider.selectedProduct?.sId}'),
                           initialValue: couponProvider.selectedProduct,
-                          hintText: couponProvider.selectedProduct?.name ?? 'Select product',
+                          hintText: 'Product (Optional)',
                           items: context.dataProvider.products,
                           displayItem: (Product? product) => product?.name ?? '',
                           onChanged: (newValue) {

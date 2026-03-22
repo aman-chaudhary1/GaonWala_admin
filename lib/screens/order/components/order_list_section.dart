@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../utility/color_list.dart';
 import '../../../models/order.dart';
 import '../../../utility/constants.dart';
+import 'package:intl/intl.dart';
 
 
 class OrderListSection extends StatelessWidget {
@@ -15,6 +16,7 @@ class OrderListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final orderProvider = context.watch<OrderProvider>();
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
@@ -36,6 +38,14 @@ class OrderListSection extends StatelessWidget {
                   columnSpacing: defaultPadding,
                   // minWidth: 600,
                   columns: [
+                    DataColumn(
+                      label: Checkbox(
+                        value: orderProvider.selectedOrderIds.length == dataProvider.orders.length && dataProvider.orders.isNotEmpty,
+                        onChanged: (val) {
+                          orderProvider.selectAll(dataProvider.orders);
+                        },
+                      ),
+                    ),
                     DataColumn(
                       label: Text("Customer Name"),
                     ),
@@ -60,13 +70,23 @@ class OrderListSection extends StatelessWidget {
                   ],
                   rows: List.generate(
                     dataProvider.orders.length,
-                    (index) => orderDataRow(dataProvider.orders[index],index+1, delete: () {
-                      //TODO: should complete call deleteOrder
-                      context.read<OrderProvider>().deleteOrder(dataProvider.orders[index].sId!);
-
-                    }, edit: () {
-                      showOrderForm(context, dataProvider.orders[index]);
-                    }),
+                    (index) {
+                      final order = dataProvider.orders[index];
+                      return orderDataRow(
+                        order,
+                        index + 1,
+                        isSelected: orderProvider.isSelected(order.sId ?? ''),
+                        onSelect: (val) {
+                          orderProvider.toggleSelection(order.sId ?? '');
+                        },
+                        delete: () {
+                          context.read<OrderProvider>().deleteOrder(order.sId!);
+                        },
+                        edit: () {
+                          showOrderForm(context, order);
+                        },
+                      );
+                    },
                   ),
                 );
               },
@@ -78,9 +98,18 @@ class OrderListSection extends StatelessWidget {
   }
 }
 
-DataRow orderDataRow(Order orderInfo, int index, {Function? edit, Function? delete}) {
+DataRow orderDataRow(Order orderInfo, int index,
+    {required bool isSelected, required Function(bool?) onSelect, Function? edit, Function? delete}) {
   return DataRow(
+    selected: isSelected,
+    onSelectChanged: onSelect,
     cells: [
+      DataCell(
+        Checkbox(
+          value: isSelected,
+          onChanged: onSelect,
+        ),
+      ),
       DataCell(
         Row(
           children: [
@@ -100,10 +129,12 @@ DataRow orderDataRow(Order orderInfo, int index, {Function? edit, Function? dele
           ],
         ),
       ),
-      DataCell(Text('${orderInfo.orderTotal?.total}')),
+      DataCell(Text('Rs ${orderInfo.orderTotal?.total}')),
       DataCell(Text(orderInfo.paymentMethod ?? '')),
       DataCell(Text(orderInfo.orderStatus ?? '')),
-      DataCell(Text(orderInfo.orderDate ?? '')),
+      DataCell(Text(orderInfo.orderDate != null
+          ? DateFormat('dd-MM-yyyy HH:mm').format(DateTime.parse(orderInfo.orderDate!).toLocal())
+          : '')),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

@@ -433,9 +433,13 @@ class DataProvider extends ChangeNotifier {
   }
 
   //TODO: should complete getAllOrders
-  Future<List<Order>> getAllOrders({bool showSnack = false}) async {
+  Future<List<Order>> getAllOrders({bool showSnack = false, String? date}) async {
     try {
-      final response = await service.getItems(endpointUrl: "orders");
+      Map<String, dynamic>? query;
+      if (date != null) {
+        query = {"date": date};
+      }
+      final response = await service.getItems(endpointUrl: "orders", query: query);
 
       if (response.isOk) {
         ApiResponse<List<Order>> apiResponse =

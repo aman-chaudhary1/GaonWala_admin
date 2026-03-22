@@ -6,9 +6,9 @@ import '../utility/constants.dart';
 class HttpService {
   final String baseUrl = MAIN_URL;
 
-  Future<Response> getItems({required String endpointUrl}) async {
+  Future<Response> getItems({required String endpointUrl, Map<String, dynamic>? query}) async {
     try {
-      return await GetConnect().get('$baseUrl/$endpointUrl');
+      return await GetConnect().get('$baseUrl/$endpointUrl', query: query);
     } catch (e) {
       return Response(
           body: json.encode({'error': e.toString()}), statusCode: 500);

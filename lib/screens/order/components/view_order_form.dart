@@ -16,8 +16,6 @@ class OrderSubmitForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    context.orderProvider.trackingUrlCtrl.text = order?.trackingUrl ?? '';
-    context.orderProvider.orderForUpdate = order;
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(defaultPadding),
@@ -121,10 +119,11 @@ class OrderSubmitForm extends StatelessWidget {
             ),
           ),
           formRow('Phone:', Text(order?.shippingAddress?.phone ?? 'N/A', style: TextStyle(fontSize: 16))),
-          formRow('Street:', Text(order?.shippingAddress?.street ?? 'N/A', style: TextStyle(fontSize: 16))),
-          formRow('City:', Text(order?.shippingAddress?.city ?? 'N/A', style: TextStyle(fontSize: 16))),
-          formRow('Postal Code:', Text(order?.shippingAddress?.postalCode ?? 'N/A', style: TextStyle(fontSize: 16))),
-          formRow('Country:', Text(order?.shippingAddress?.country ?? 'N/A', style: TextStyle(fontSize: 16))),
+          formRow('Village:', Text(order?.shippingAddress?.village ?? 'N/A', style: TextStyle(fontSize: 16))),
+          formRow('Panchayat:', Text(order?.shippingAddress?.panchayat ?? 'N/A', style: TextStyle(fontSize: 16))),
+          formRow('Block:', Text(order?.shippingAddress?.block ?? 'N/A', style: TextStyle(fontSize: 16))),
+          formRow('Landmark:', Text(order?.shippingAddress?.landmark ?? 'N/A', style: TextStyle(fontSize: 16))),
+          formRow('Delivery Fee:', Text('Rs ${order?.shippingAddress?.deliveryFee?.toStringAsFixed(2) ?? '0.00'}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
         ],
       ),
     );
@@ -160,14 +159,18 @@ class OrderSubmitForm extends StatelessWidget {
           formRow('Payment Method:', Text(order?.paymentMethod ?? 'N/A', style: TextStyle(fontSize: 16))),
           formRow('Coupon Code:', Text(order?.couponCode?.couponCode ?? 'N/A', style: TextStyle(fontSize: 16))),
           formRow('Order Sub Total:',
-              Text('\$${order?.orderTotal?.subtotal?.toStringAsFixed(2) ?? 'N/A'}', style: TextStyle(fontSize: 16))),
+              Text('Rs ${order?.orderTotal?.subtotal?.toStringAsFixed(2) ?? 'N/A'}', style: TextStyle(fontSize: 16))),
           formRow(
               'Discount:',
-              Text('\$${order?.orderTotal?.discount?.toStringAsFixed(2) ?? 'N/A'}',
+              Text('Rs ${order?.orderTotal?.discount?.toStringAsFixed(2) ?? 'N/A'}',
                   style: TextStyle(fontSize: 16, color: Colors.red))),
           formRow(
+              'Delivery Fee:',
+              Text('Rs ${order?.orderTotal?.shipping?.toStringAsFixed(2) ?? 'N/A'}',
+                  style: TextStyle(fontSize: 16, color: Colors.blue))),
+          formRow(
               'Grand Total:',
-              Text('\$${order?.orderTotal?.total?.toStringAsFixed(2) ?? 'N/A'}',
+              Text('Rs ${order?.orderTotal?.total?.toStringAsFixed(2) ?? 'N/A'}',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
         ],
       ),
@@ -205,7 +208,7 @@ class OrderSubmitForm extends StatelessWidget {
           SizedBox(height: defaultPadding), // Add some spacing before the total price
           formRow(
             'Total Price:',
-            Text('\$${order?.totalPrice?.toStringAsFixed(2) ?? 'N/A'}',
+            Text('Rs ${order?.totalPrice?.toStringAsFixed(2) ?? 'N/A'}',
                 style: TextStyle(fontSize: 16, color: Colors.green)),
           ),
         ],
@@ -225,7 +228,8 @@ class OrderSubmitForm extends StatelessWidget {
         final item = order!.items![index];
         return Padding(
           padding: EdgeInsets.only(bottom: 4.0), // Add spacing between items
-          child: Text('${item.productName}: ${item.quantity} x \$${item.price?.toStringAsFixed(2)}',
+          child: Text(
+              '${item.productName ?? 'Unknown Product'}${item.unit != null && item.unit!.isNotEmpty ? ' (${item.unit})' : ''}: ${item.quantity} x Rs ${item.price?.toStringAsFixed(2)}',
               style: TextStyle(fontSize: 16)),
         );
       },
@@ -262,6 +266,7 @@ class OrderSubmitForm extends StatelessWidget {
 
 // How to show the order popup
 void showOrderForm(BuildContext context, Order? order) {
+  context.read<OrderProvider>().updateOrderDetails(order);
   showDialog(
     context: context,
     builder: (BuildContext context) {

@@ -74,6 +74,9 @@ import 'screens/coupon_code/provider/coupon_code_provider.dart';
 import 'screens/posters/provider/poster_provider.dart';
 import 'screens/order/provider/order_provider.dart';
 import 'screens/notification/provider/notification_provider.dart';
+import 'screens/users/provider/user_provider.dart';
+import 'screens/rural_area/provider/rural_area_provider.dart';
+import 'screens/status/provider/analytics_provider.dart';
 import 'screens/login/provider/login_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -140,6 +143,21 @@ void main() async {
           create: (context) => NotificationProvider(context.read<DataProvider>()),
           update: (context, dataProvider, previous) =>
               previous ?? NotificationProvider(dataProvider),
+        ),
+        ChangeNotifierProxyProvider<DataProvider, RuralAreaProvider>(
+          create: (context) => RuralAreaProvider(context.read<DataProvider>()),
+          update: (context, dataProvider, previous) =>
+              previous ?? RuralAreaProvider(dataProvider),
+        ),
+        ChangeNotifierProxyProvider<DataProvider, UserProvider>(
+          create: (context) => UserProvider(context.read<DataProvider>()),
+          update: (context, dataProvider, previous) =>
+              previous ?? UserProvider(dataProvider),
+        ),
+        ChangeNotifierProxyProvider<DataProvider, AnalyticsProvider>(
+          create: (context) => AnalyticsProvider(context.read<DataProvider>()),
+          update: (context, dataProvider, previous) =>
+              previous ?? AnalyticsProvider(dataProvider),
         ),
 
         /// Independent providers

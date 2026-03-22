@@ -10,7 +10,10 @@ import '../../variants_type/variants_type_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../users/users_screen.dart';
+import '../../status/status_screen.dart';
 import '../../sub_category/sub_category_screen.dart';
+import '../../rural_area/rural_area_screen.dart';
 
 class MainScreenProvider extends ChangeNotifier{
   Widget selectedScreen = DashboardScreen();
@@ -48,6 +51,15 @@ class MainScreenProvider extends ChangeNotifier{
         break;
       case 'Notifications':
         selectedScreen = NotificationScreen();
+        break;
+      case 'Users':
+        selectedScreen = UsersScreen();
+        break;
+      case 'Status':
+        selectedScreen = StatusScreen();
+        break;
+      case 'RuralArea':
+        selectedScreen = RuralAreaScreen();
         break;
       default:
         selectedScreen = DashboardScreen();

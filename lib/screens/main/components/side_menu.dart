@@ -85,6 +85,27 @@ class SideMenu extends StatelessWidget {
               context.mainScreenProvider.navigateToScreen('Notifications');
             },
           ),
+          DrawerListTile(
+            title: "Users",
+            svgSrc: "assets/icons/menu_profile.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('Users');
+            },
+          ),
+          DrawerListTile(
+            title: "Status",
+            svgSrc: "assets/icons/menu_doc.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('Status');
+            },
+          ),
+          DrawerListTile(
+            title: "Rural Areas",
+            svgSrc: "assets/icons/menu_tran.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('RuralArea');
+            },
+          ),
         ],
       ),
     );

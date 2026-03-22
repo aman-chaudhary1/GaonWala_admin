@@ -72,7 +72,7 @@ class DashBoardProvider extends ChangeNotifier {
         'proCategoryId': selectedCategory?.sId ?? '',
         'proSubCategoryId': selectedSubCategory?.sId ?? '',
         'price': productPriceCtrl.text,
-        'offPrice': productOffPriceCtrl.text.isEmpty
+        'offerPrice': productOffPriceCtrl.text.isEmpty
             ? productPriceCtrl.text
             : productOffPriceCtrl.text,
         'quantity': productQntCtrl.text,
@@ -135,7 +135,6 @@ class DashBoardProvider extends ChangeNotifier {
         'proVariantId': selectedVariants,
         'todaysSpecial': isTodaysSpecial.toString(),
         'isAvailable': isAvailable.toString(),
-        'unit': selectedUnit == 'Other' ? customUnitCtrl.text : selectedUnit ?? 'kg',
         'unit': selectedUnit == 'Other' ? customUnitCtrl.text : selectedUnit ?? 'kg',
         'productSize': productSizeCtrl.text.isEmpty ? '' : productSizeCtrl.text,
       };

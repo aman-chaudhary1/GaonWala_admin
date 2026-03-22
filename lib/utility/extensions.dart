@@ -10,10 +10,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../core/data/data_provider.dart';
 import '../screens/order/provider/order_provider.dart';
+import '../screens/users/provider/user_provider.dart';
 import '../screens/variants/provider/variant_provider.dart';
 import '../screens/variants_type/provider/variant_type_provider.dart';
-
-
+import '../screens/rural_area/provider/rural_area_provider.dart';
+import '../screens/status/provider/analytics_provider.dart';
 
 extension Providers on BuildContext {
   DataProvider get dataProvider => Provider.of<DataProvider>(this, listen: false);
@@ -28,4 +29,7 @@ extension Providers on BuildContext {
   PosterProvider get posterProvider => Provider.of<PosterProvider>(this, listen: false);
   OrderProvider get orderProvider => Provider.of<OrderProvider>(this, listen: false);
   NotificationProvider get notificationProvider => Provider.of<NotificationProvider>(this, listen: false);
+  UserProvider get userProvider => Provider.of<UserProvider>(this, listen: false);
+  RuralAreaProvider get ruralAreaProvider => Provider.of<RuralAreaProvider>(this, listen: false);
+  AnalyticsProvider get analyticsProvider => Provider.of<AnalyticsProvider>(this, listen: false);
 }

@@ -5,6 +5,7 @@ class User {
   String? phoneNo;
   String? profileImage;
   String? fcmToken;
+  String? userStatus;
   String? createdAt;
   String? updatedAt;
 
@@ -15,6 +16,7 @@ class User {
       this.phoneNo,
       this.profileImage,
       this.fcmToken,
+      this.userStatus,
       this.createdAt,
       this.updatedAt});
 
@@ -25,6 +27,7 @@ class User {
     phoneNo = json['phoneNo'];
     profileImage = json['profileImage'];
     fcmToken = json['fcmToken'];
+    userStatus = json['userStatus'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
@@ -37,6 +40,7 @@ class User {
     data['phoneNo'] = this.phoneNo;
     data['profileImage'] = this.profileImage;
     data['fcmToken'] = this.fcmToken;
+    data['userStatus'] = this.userStatus;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     return data;
