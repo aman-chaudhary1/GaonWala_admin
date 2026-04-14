@@ -9,6 +9,13 @@ class User {
   String? createdAt;
   String? updatedAt;
 
+  String? role;
+  String? shopName;
+  String? shopAddress;
+  String? shopStatus;
+  List<String>? assignedCategories;
+  List<String>? assignedSubCategories;
+
   User(
       {this.sId,
       this.name,
@@ -17,6 +24,12 @@ class User {
       this.profileImage,
       this.fcmToken,
       this.userStatus,
+      this.role,
+      this.shopName,
+      this.shopAddress,
+      this.shopStatus,
+      this.assignedCategories,
+      this.assignedSubCategories,
       this.createdAt,
       this.updatedAt});
 
@@ -28,6 +41,12 @@ class User {
     profileImage = json['profileImage'];
     fcmToken = json['fcmToken'];
     userStatus = json['userStatus'];
+    role = json['role'];
+    shopName = json['shopName'];
+    shopAddress = json['shopAddress'];
+    shopStatus = json['shopStatus'];
+    assignedCategories = json['assignedCategories'] != null ? List<String>.from(json['assignedCategories']) : null;
+    assignedSubCategories = json['assignedSubCategories'] != null ? List<String>.from(json['assignedSubCategories']) : null;
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
@@ -41,6 +60,12 @@ class User {
     data['profileImage'] = this.profileImage;
     data['fcmToken'] = this.fcmToken;
     data['userStatus'] = this.userStatus;
+    data['role'] = this.role;
+    data['shopName'] = this.shopName;
+    data['shopAddress'] = this.shopAddress;
+    data['shopStatus'] = this.shopStatus;
+    data['assignedCategories'] = this.assignedCategories;
+    data['assignedSubCategories'] = this.assignedSubCategories;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     return data;

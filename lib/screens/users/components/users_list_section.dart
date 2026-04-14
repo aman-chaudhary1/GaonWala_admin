@@ -25,29 +25,32 @@ class UsersListSection extends StatelessWidget {
             "All Users",
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(
-            width: double.infinity,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  columns: [
-                    DataColumn(
-                      label: Text("Name"),
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 600),
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    columns: [
+                      DataColumn(
+                        label: Text("Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Email"),
+                      ),
+                      DataColumn(
+                        label: Text("Status"),
+                      ),
+                      DataColumn(
+                        label: Text("Actions"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.users.length,
+                      (index) => userDataRow(context, dataProvider.users[index]),
                     ),
-                    DataColumn(
-                      label: Text("Email"),
-                    ),
-                    DataColumn(
-                      label: Text("Status"),
-                    ),
-                    DataColumn(
-                      label: Text("Actions"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.users.length,
-                    (index) => userDataRow(context, dataProvider.users[index]),
                   ),
                 );
               },

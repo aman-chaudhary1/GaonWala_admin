@@ -93,6 +93,20 @@ class SideMenu extends StatelessWidget {
             },
           ),
           DrawerListTile(
+            title: "Shopkeepers",
+            svgSrc: "assets/icons/menu_profile.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('Shopkeepers');
+            },
+          ),
+          DrawerListTile(
+            title: "Vendor Products",
+            svgSrc: "assets/icons/menu_store.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('VendorProducts');
+            },
+          ),
+          DrawerListTile(
             title: "Status",
             svgSrc: "assets/icons/menu_doc.svg",
             press: () {
@@ -104,6 +118,13 @@ class SideMenu extends StatelessWidget {
             svgSrc: "assets/icons/menu_tran.svg",
             press: () {
               context.mainScreenProvider.navigateToScreen('RuralArea');
+            },
+          ),
+          DrawerListTile(
+            title: "App Version",
+            svgSrc: "assets/icons/menu_setting.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('AppVersion');
             },
           ),
         ],

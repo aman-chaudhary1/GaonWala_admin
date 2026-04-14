@@ -28,41 +28,44 @@ class NotificationListSection extends StatelessWidget {
             "All Notification",
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(
-            width: double.infinity,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Title"),
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 800),
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    // minWidth: 600,
+                    columns: [
+                      DataColumn(
+                        label: Text("Title"),
+                      ),
+                      DataColumn(
+                        label: Text("Description"),
+                      ),
+                      DataColumn(
+                        label: Text("Send Date"),
+                      ),
+                      DataColumn(
+                        label: Text("View"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.notifications.length,
+                      (index) => notificationDataRow(
+                          dataProvider.notifications[index], index + 1, edit: () {
+                        viewNotificationStatics(
+                            context, dataProvider.notifications[index]);
+                      }, delete: () {
+                        //TODO: should complete call deleteNotification
+                        context.notificationProvider.deleteNotification(
+                            dataProvider.notifications[index]);
+                      }),
                     ),
-                    DataColumn(
-                      label: Text("Description"),
-                    ),
-                    DataColumn(
-                      label: Text("Send Date"),
-                    ),
-                    DataColumn(
-                      label: Text("View"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.notifications.length,
-                    (index) => notificationDataRow(
-                        dataProvider.notifications[index], index + 1, edit: () {
-                      viewNotificationStatics(
-                          context, dataProvider.notifications[index]);
-                    }, delete: () {
-                      //TODO: should complete call deleteNotification
-                      context.notificationProvider.deleteNotification(
-                          dataProvider.notifications[index]);
-                    }),
                   ),
                 );
               },

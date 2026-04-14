@@ -32,39 +32,42 @@ class VariantsListSection extends StatelessWidget {
                 .textTheme
                 .titleMedium,
           ),
-          SizedBox(
-            width: double.infinity,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Variant"),
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 800),
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    // minWidth: 600,
+                    columns: [
+                      DataColumn(
+                        label: Text("Variant"),
+                      ),
+                      DataColumn(
+                        label: Text("Variant Type"),
+                      ),
+                      DataColumn(
+                        label: Text("Added Date"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.variants.length,
+                          (index) =>
+                          variantDataRow(dataProvider.variants[index], index + 1, edit: () {
+                            showAddVariantForm(context, dataProvider.variants[index]);
+                          }, delete: () {
+                            //TODO: should complete call deleteVariant
+                            context.variantProvider.deleteVariant(dataProvider.variants[index]);
+                          }),
                     ),
-                    DataColumn(
-                      label: Text("Variant Type"),
-                    ),
-                    DataColumn(
-                      label: Text("Added Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.variants.length,
-                        (index) =>
-                        variantDataRow(dataProvider.variants[index], index + 1, edit: () {
-                          showAddVariantForm(context, dataProvider.variants[index]);
-                        }, delete: () {
-                          //TODO: should complete call deleteVariant
-                          context.variantProvider.deleteVariant(dataProvider.variants[index]);
-                        }),
                   ),
                 );
               },

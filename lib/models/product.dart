@@ -15,8 +15,13 @@ class Product {
   List<Images>? images;
   String? unit;
   double? productSize;
+  ProRef? addedBy;
+  String? status;
+  double? shopkeeperPrice;
+  double? shopkeeperOfferPrice;
   String? createdAt;
   String? updatedAt;
+  String? rejectionReason;
   int? iV;
 
   Product(
@@ -36,8 +41,13 @@ class Product {
         this.images,
         this.unit,
         this.productSize,
+        this.addedBy,
+        this.status,
+        this.shopkeeperPrice,
+        this.shopkeeperOfferPrice,
         this.createdAt,
         this.updatedAt,
+        this.rejectionReason,
         this.iV});
 
   Product.fromJson(Map<String, dynamic> json) {
@@ -49,10 +59,10 @@ class Product {
     offerPrice = json['offerPrice']?.toDouble();
     todaysSpecial = json['todaysSpecial'];
     isAvailable = json['isAvailable'];
-    proCategoryId = json['proCategoryId'] != null
+    proCategoryId = json['proCategoryId'] != null && json['proCategoryId'] is Map
         ? new ProRef.fromJson(json['proCategoryId'])
         : null;
-    proSubCategoryId = json['proSubCategoryId'] != null
+    proSubCategoryId = json['proSubCategoryId'] != null && json['proSubCategoryId'] is Map
         ? new ProRef.fromJson(json['proSubCategoryId'])
         : null;
     proBrandId = json['proBrandId'] != null
@@ -70,8 +80,13 @@ class Product {
     }
     unit = json['unit'];
     productSize = json['productSize']?.toDouble();
+    addedBy = json['addedBy'] != null ? new ProRef.fromJson(json['addedBy']) : null;
+    status = json['status'];
+    shopkeeperPrice = json['shopkeeperPrice']?.toDouble();
+    shopkeeperOfferPrice = json['shopkeeperOfferPrice']?.toDouble();
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    rejectionReason = json['rejectionReason'];
     iV = json['__v'];
   }
 
@@ -104,8 +119,15 @@ class Product {
     data['todaysSpecial'] = this.todaysSpecial;
     data['unit'] = this.unit;
     data['productSize'] = this.productSize;
+    if (this.addedBy != null) {
+      data['addedBy'] = this.addedBy!.toJson();
+    }
+    data['status'] = this.status;
+    data['shopkeeperPrice'] = this.shopkeeperPrice;
+    data['shopkeeperOfferPrice'] = this.shopkeeperOfferPrice;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    data['rejectionReason'] = this.rejectionReason;
     data['__v'] = this.iV;
     return data;
   }
@@ -114,18 +136,21 @@ class Product {
 class ProRef {
   String? sId;
   String? name;
+  String? shopName;
 
-  ProRef({this.sId, this.name});
+  ProRef({this.sId, this.name, this.shopName});
 
   ProRef.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'];
+    shopName = json['shopName'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     data['name'] = this.name;
+    data['shopName'] = this.shopName;
     return data;
   }
 }

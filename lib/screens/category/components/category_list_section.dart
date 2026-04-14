@@ -27,37 +27,40 @@ class CategoryListSection extends StatelessWidget {
             "All Categories",
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(
-            width: double.infinity,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Category Name"),
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 600),
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    // minWidth: 600,
+                    columns: [
+                      DataColumn(
+                        label: Text("Category Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Added Date"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.categories.length,
+                      (index) => categoryDataRow(dataProvider.categories[index], delete: () {
+                        print("delete category");
+                                            context.categoryProvider.deleteCategory(dataProvider.categories[index]);
+                                            print("delete category");
+                        //TODO: should complete call  deleteCategory(complete)
+                      }, edit: () {
+                        showAddCategoryForm(context, dataProvider.categories[index]);
+                      }),
                     ),
-                    DataColumn(
-                      label: Text("Added Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.categories.length,
-                    (index) => categoryDataRow(dataProvider.categories[index], delete: () {
-                      print("delete category");
-                                          context.categoryProvider.deleteCategory(dataProvider.categories[index]);
-                                          print("delete category");
-                      //TODO: should complete call  deleteCategory(complete)
-                    }, edit: () {
-                      showAddCategoryForm(context, dataProvider.categories[index]);
-                    }),
                   ),
                 );
               },

@@ -30,54 +30,49 @@ class ProductListSection extends StatelessWidget {
                 .textTheme
                 .titleMedium,
           ),
-          SizedBox(
-            width: double.infinity,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: MediaQuery.of(context).size.width - (defaultPadding * 2),
-                    ),
-                    child: DataTable(
-                      columnSpacing: defaultPadding,
-                      columns: [
-                        DataColumn(
-                          label: Text("Product Name"),
-                        ),
-                        DataColumn(
-                          label: Text("Category"),
-                        ),
-                        DataColumn(
-                          label: Text("Sub Category"),
-                        ),
-                        DataColumn(
-                          label: Text("Price"),
-                        ),
-                        DataColumn(
-                          label: Text("Stock"),
-                        ),
-                        DataColumn(
-                          label: Text("Status"),
-                        ),
-                        DataColumn(
-                          label: Text("Edit"),
-                        ),
-                        DataColumn(
-                          label: Text("Delete"),
-                        ),
-                      ],
-                      rows: List.generate(
-                        dataProvider.products.length,
-                        (index) => productDataRow(dataProvider.products[index], edit: () {
-                          showAddProductForm(context, dataProvider.products[index]);
-                        },
-                          delete: () {
-                            //TODO: should complete call deleteProduct(compleyte)
-                            context.dashBoardProvider.deleteProduct(dataProvider.products[index]);
-                          },),
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 1000),
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    columns: [
+                      DataColumn(
+                        label: Text("Product Name"),
                       ),
+                      DataColumn(
+                        label: Text("Category"),
+                      ),
+                      DataColumn(
+                        label: Text("Sub Category"),
+                      ),
+                      DataColumn(
+                        label: Text("Price"),
+                      ),
+                      DataColumn(
+                        label: Text("Stock"),
+                      ),
+                      DataColumn(
+                        label: Text("Status"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.products.length,
+                      (index) => productDataRow(dataProvider.products[index], edit: () {
+                        showAddProductForm(context, dataProvider.products[index]);
+                      },
+                        delete: () {
+                          //TODO: should complete call deleteProduct(compleyte)
+                          context.dashBoardProvider.deleteProduct(dataProvider.products[index]);
+                        },),
                     ),
                   ),
                 );

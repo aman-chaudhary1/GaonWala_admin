@@ -15,6 +15,9 @@ import '../../models/brand.dart';
 import '../../models/sub_category.dart';
 import '../../models/variant.dart';
 import '../../models/user.dart';
+import 'dart:async';
+import '../../utility/notification_helper.dart';
+import '../../utility/sound_helper.dart';
 
 class DataProvider extends ChangeNotifier {
   HttpService service = HttpService();
@@ -73,18 +76,97 @@ class DataProvider extends ChangeNotifier {
   List<User> _filteredUsers = [];
   List<User> get users => _filteredUsers;
 
+  Timer? _orderPollingTimer;
+  Set<String> _knownOrderIds = {};
+  bool _isFirstLoad = true;
+  String notificationStatus = "Initializing...";
+
   DataProvider() {
-    getAllProduct();
-    getAllCategory();
-    getAllSubCategory();
-    getAllBrands();
-    getAllVariantTypes();
-    getAllVariant();
-    getAllPosters();
-    getAllCoupons();
-    getAllOrders();
-    getAllNotifications();
-    getAllUsers();
+    startOrderPolling();
+    refreshAllData();
+  }
+
+  Future<void> refreshAllData() async {
+    print("🔄 DataProvider: Refreshing all data...");
+    await Future.wait([
+      getAllProduct(),
+      getAllCategory(),
+      getAllSubCategory(),
+      getAllBrands(),
+      getAllVariantTypes(),
+      getAllVariant(),
+      getAllPosters(),
+      getAllCoupons(),
+      getAllOrders(),
+      getAllNotifications(),
+      getAllUsers(),
+    ]);
+    print("✅ DataProvider: All data refreshed.");
+  }
+
+  void startOrderPolling() {
+    print("Notification System: Starting order polling (every 30s)");
+    _orderPollingTimer?.cancel();
+    _orderPollingTimer = Timer.periodic(Duration(seconds: 30), (timer) {
+      checkNewOrders();
+    });
+  }
+
+  Future<void> checkNewOrders() async {
+    try {
+      print("Notification System: Checking for new orders...");
+      notificationStatus = "Checking...";
+      notifyListeners();
+      final response = await service.getItems(endpointUrl: "orders");
+      if (response.isOk) {
+        notificationStatus = "Active";
+        ApiResponse<List<Order>> apiResponse =
+            ApiResponse<List<Order>>.fromJson(
+          response.body,
+          (json) => (json as List).map((item) => Order.fromJson(item)).toList(),
+        );
+
+        final orders = apiResponse.data ?? [];
+        print("Notification System: Fetched ${orders.length} orders. Known IDs: ${_knownOrderIds.length}");
+        if (orders.isNotEmpty) {
+          // Detect any new IDs that were not in our known set
+          bool foundNewOrder = false;
+          for (var order in orders) {
+            String? id = order.sId;
+            if (id != null && _knownOrderIds.isNotEmpty && !_knownOrderIds.contains(id)) {
+              print("Notification System: >>> NEW ORDER DETECTED! ID: $id <<<");
+              foundNewOrder = true;
+              NotificationHelper.showNotification(
+                  "New Order Received!", "Order ID: $id");
+              SoundHelper.playNotificationSound();
+            }
+          }
+          
+          // Update known IDs
+          _knownOrderIds.addAll(orders.map((o) => o.sId ?? "").where((id) => id.isNotEmpty));
+          
+          if (foundNewOrder) {
+            _allOrders = orders;
+            _filteredOrders = List.from(_allOrders);
+            notifyListeners();
+          }
+        }
+      } else {
+        notificationStatus = "Error: ${response.statusCode}";
+        print("Notification System: API Error - ${response.statusText}");
+      }
+      notifyListeners();
+    } catch (e) {
+      notificationStatus = "Error: Exception";
+      print("Notification System: Error checking new orders: $e");
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _orderPollingTimer?.cancel();
+    super.dispose();
   }
 
   //TODO: should complete getAllCategory(complete)
@@ -106,7 +188,6 @@ class DataProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
     return _filteredCategories;
   }
@@ -143,7 +224,6 @@ class DataProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
     return _filteredSubCategories;
   }
@@ -180,7 +260,6 @@ class DataProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
     return _filteredBrands;
   }
@@ -217,7 +296,6 @@ class DataProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
     return _filteredVariantTypes;
   }
@@ -254,7 +332,6 @@ class DataProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
     return _filteredVariants;
   }
@@ -275,21 +352,25 @@ class DataProvider extends ChangeNotifier {
   //TODO: should complete getAllProduct
   Future<void> getAllProduct({bool showSnack = false}) async {
     try {
-      Response response = await service.getItems(endpointUrl: 'products');
-      ApiResponse<List<Product>> apiResponse =
-          ApiResponse<List<Product>>.fromJson(
-              response.body,
-              (json) => (json as List)
-                  .map((item) => Product.fromJson(item))
-                  .toList());
-      _allProducts = apiResponse.data ?? [];
-      _filteredProducts =
-          List.from(_allProducts); // Initialize filtered list with all data
-      notifyListeners();
-      if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      Response response = await service.getItems(endpointUrl: 'products', query: {'status': 'all'});
+      if (response.isOk) {
+        ApiResponse<List<Product>> apiResponse =
+            ApiResponse<List<Product>>.fromJson(
+                response.body,
+                (json) => (json as List)
+                    .map((item) => Product.fromJson(item))
+                    .toList());
+        _allProducts = apiResponse.data ?? [];
+        _filteredProducts =
+            List.from(_allProducts); // Initialize filtered list with all data
+        notifyListeners();
+        if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      } else {
+        print("❌ Error fetching products: ${response.statusText} (${response.statusCode})");
+      }
     } catch (e) {
+      print("❌ Parsing error in getAllProduct: $e");
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
   }
 
@@ -338,7 +419,6 @@ class DataProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
     return _filteredCoupons;
   }
@@ -375,7 +455,6 @@ class DataProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
     return _filteredPosters;
   }
@@ -398,7 +477,8 @@ class DataProvider extends ChangeNotifier {
   Future<List<MyNotification>> getAllNotifications(
       {bool showSnack = false}) async {
     try {
-      Response response = await service.getItems(endpointUrl: 'notifications');
+      // Corrected endpoint from 'notification' to 'notification/all-notification'
+      Response response = await service.getItems(endpointUrl: 'notification/all-notification');
       if (response.isOk) {
         ApiResponse<List<MyNotification>> apiResponse =
             ApiResponse<List<MyNotification>>.fromJson(
@@ -414,7 +494,6 @@ class DataProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
     return _filteredNotifications;
   }
@@ -450,6 +529,13 @@ class DataProvider extends ChangeNotifier {
 
         _allOrders = apiResponse.data ?? [];
         _filteredOrders = List.from(_allOrders);
+        
+        // Only populate known IDs on first load or if it was empty
+        if (_isFirstLoad || _knownOrderIds.isEmpty) {
+          _knownOrderIds = _allOrders.map((o) => o.sId ?? "").toSet();
+          _isFirstLoad = false;
+          print("Notification System: Initialized known IDs with ${_knownOrderIds.length} orders");
+        }
 
         notifyListeners();
 
@@ -457,7 +543,6 @@ class DataProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
 
     return _filteredOrders;
@@ -556,10 +641,15 @@ class DataProvider extends ChangeNotifier {
         _filteredUsers = List.from(_allUsers);
         notifyListeners();
         if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      } else {
+        print("❌ Error fetching users: ${response.statusText} (${response.statusCode})");
+        if (response.statusCode == 401) {
+          print("⚠️ Authorization failed. Please log out and log back in as an Admin.");
+        }
       }
     } catch (e) {
+      print("❌ Parsing error in getAllUsers: $e");
       SnackBarHelper.showErrorSnackBar(e.toString());
-      rethrow;
     }
     return _filteredUsers;
   }

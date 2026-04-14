@@ -28,38 +28,41 @@ class BrandListSection extends StatelessWidget {
             "All Brands",
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(
-            width: double.infinity,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Brands Name"),
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 800),
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    // minWidth: 600,
+                    columns: [
+                      DataColumn(
+                        label: Text("Brands Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Sub Category"),
+                      ),
+                      DataColumn(
+                        label: Text("Added Date"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.brands.length,
+                      (index) => brandDataRow(dataProvider.brands[index], index + 1, edit: () {
+                        showBrandForm(context, dataProvider.brands[index]);
+                      }, delete: () {
+                        //TODO: should complete deleteBrand(complete)
+                        context.brandProvider.deleteBrand(dataProvider.brands[index]);
+                      }),
                     ),
-                    DataColumn(
-                      label: Text("Sub Category"),
-                    ),
-                    DataColumn(
-                      label: Text("Added Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.brands.length,
-                    (index) => brandDataRow(dataProvider.brands[index], index + 1, edit: () {
-                      showBrandForm(context, dataProvider.brands[index]);
-                    }, delete: () {
-                      //TODO: should complete deleteBrand(complete)
-                      context.brandProvider.deleteBrand(dataProvider.brands[index]);
-                    }),
                   ),
                 );
               },

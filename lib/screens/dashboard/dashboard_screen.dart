@@ -46,10 +46,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 final isSmallHeader = screenWidth < 800;
                 
                 Widget buildHeaderRow() {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  return Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 12,
+                    runSpacing: 12,
                     children: [
-                      Expanded(
+                      SizedBox(
+                        width: isSmallHeader ? constraints.maxWidth : 200,
                         child: Text(
                           "My Products",
                           style: Theme.of(context).textTheme.titleMedium,
@@ -60,7 +63,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ElevatedButton.icon(
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.symmetric(
-                              horizontal: defaultPadding * (isSmallHeader ? 1.0 : 1.5),
+                              horizontal:
+                                  defaultPadding * (isSmallHeader ? 1.0 : 1.5),
                               vertical: defaultPadding,
                             ),
                           ),
@@ -78,10 +82,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           icon: Icon(Icons.add),
                           tooltip: "Add New",
                         ),
-                      SizedBox(width: isSmallHeader ? 8 : 20),
                       IconButton(
                         onPressed: () {
-                          context.read<DataProvider>().getAllProduct(showSnack: true);
+                          context
+                              .read<DataProvider>()
+                              .getAllProduct(showSnack: true);
                         },
                         icon: Icon(Icons.refresh),
                         constraints: BoxConstraints(),

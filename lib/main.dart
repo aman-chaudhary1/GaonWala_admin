@@ -78,6 +78,9 @@ import 'screens/users/provider/user_provider.dart';
 import 'screens/rural_area/provider/rural_area_provider.dart';
 import 'screens/status/provider/analytics_provider.dart';
 import 'screens/login/provider/login_provider.dart';
+import 'screens/shopkeepers/provider/shopkeeper_provider.dart';
+import 'screens/vendor_products/provider/vendor_product_provider.dart';
+import 'screens/app_version/provider/version_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'utility/constants.dart';
@@ -91,7 +94,11 @@ void main() async {
     MultiProvider(
       providers: [
         /// Main data provider (must come first)
-        ChangeNotifierProvider(create: (_) => DataProvider()),
+        ChangeNotifierProvider(create: (context) {
+          final provider = DataProvider();
+          Get.put(provider); // Register with Get for global access (e.g. in LoginProvider)
+          return provider;
+        }),
 
         /// ✅ Dependent providers (use ProxyProvider)
         ChangeNotifierProxyProvider<DataProvider, CategoryProvider>(
@@ -158,6 +165,21 @@ void main() async {
           create: (context) => AnalyticsProvider(context.read<DataProvider>()),
           update: (context, dataProvider, previous) =>
               previous ?? AnalyticsProvider(dataProvider),
+        ),
+        ChangeNotifierProxyProvider<DataProvider, ShopkeeperProvider>(
+          create: (context) => ShopkeeperProvider(context.read<DataProvider>()),
+          update: (context, dataProvider, previous) =>
+              previous ?? ShopkeeperProvider(dataProvider),
+        ),
+        ChangeNotifierProxyProvider<DataProvider, VendorProductProvider>(
+          create: (context) => VendorProductProvider(context.read<DataProvider>()),
+          update: (context, dataProvider, previous) =>
+              previous ?? VendorProductProvider(dataProvider),
+        ),
+        ChangeNotifierProxyProvider<DataProvider, VersionProvider>(
+          create: (context) => VersionProvider(context.read<DataProvider>()),
+          update: (context, dataProvider, previous) =>
+              previous ?? VersionProvider(dataProvider),
         ),
 
         /// Independent providers

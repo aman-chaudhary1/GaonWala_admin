@@ -28,94 +28,109 @@ class OrderScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "My Orders",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ),
-                          Gap(20),
-                          Consumer<OrderProvider>(
-                            builder: (context, orderProvider, child) {
-                              return orderProvider.selectedOrderIds.isNotEmpty
-                                  ? ElevatedButton.icon(
-                                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                                      onPressed: () => _showBulkUpdateDialog(context, orderProvider),
-                                      icon: Icon(Icons.edit, color: Colors.white),
-                                      label: Text(
-                                          "Bulk Update (${orderProvider.selectedOrderIds.length})",
-                                          style: TextStyle(color: Colors.white)),
-                                    )
-                                  : SizedBox.shrink();
-                            },
-                          ),
-                          Gap(20),
-                          Consumer<OrderProvider>(
-                            builder: (context, orderProvider, child) {
-                              return Row(
-                                children: [
-                                  TextButton.icon(
-                                    onPressed: () async {
-                                      DateTime? pickedDate = await showDatePicker(
-                                        context: context,
-                                        initialDate: orderProvider.selectedDate ?? DateTime.now(),
-                                        firstDate: DateTime(2020),
-                                        lastDate: DateTime(2100),
-                                      );
-                                      if (pickedDate != null) {
-                                        orderProvider.updateSelectedDate(pickedDate);
-                                      }
-                                    },
-                                    icon: Icon(Icons.calendar_month),
-                                    label: Text(orderProvider.selectedDate == null
-                                        ? "Select Date"
-                                        : DateFormat('dd-MM-yyyy').format(orderProvider.selectedDate!)),
-                                  ),
-                                  if (orderProvider.selectedDate != null)
-                                    IconButton(
-                                      onPressed: () => orderProvider.updateSelectedDate(null),
-                                      icon: Icon(Icons.clear, color: Colors.red),
-                                    ),
-                                ],
-                              );
-                            },
-                          ),
-                          Gap(20),
-                          SizedBox(
-                            width: 280,
-                            child: CustomDropdown(
-                              hintText: 'Filter Order By status',
-                              initialValue: 'All order',
-                              items: ['All order', 'pending', 'processing', 'shipped', 'delivered', 'cancelled'],
-                              displayItem: (val) => val,
-                              onChanged: (newValue) {
-                                if (newValue?.toLowerCase() == 'all order') {
-                                  //TODO: should complete call filterOrders
-                                  context.read<OrderProvider>().loadOrders();
-                                } else {
-                                  //TODO: should complete call filterOrders
-                                  context.read<OrderProvider>().filterOrders(newValue!);
-                                }
-                              },
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please select status';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          Gap(40),
-                          IconButton(
-                              onPressed: () {
-                                //TODO: should complete call getAllOrders
-                                context.read<OrderProvider>().loadOrders();
-                              },
-                              icon: Icon(Icons.refresh)),
-                        ],
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isSmall = constraints.maxWidth < 700;
+                          return Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            alignment: WrapAlignment.start,
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
+                              SizedBox(
+                                width: isSmall ? constraints.maxWidth : 150,
+                                child: Text(
+                                  "My Orders",
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                ),
+                              ),
+                              Consumer<OrderProvider>(
+                                builder: (context, orderProvider, child) {
+                                  return orderProvider.selectedOrderIds.isNotEmpty
+                                      ? ElevatedButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.green),
+                                          onPressed: () =>
+                                              _showBulkUpdateDialog(context, orderProvider),
+                                          icon: Icon(Icons.edit, color: Colors.white),
+                                          label: Text(
+                                              "Bulk Update (${orderProvider.selectedOrderIds.length})",
+                                              style: TextStyle(color: Colors.white)),
+                                        )
+                                      : SizedBox.shrink();
+                                },
+                              ),
+                              Consumer<OrderProvider>(
+                                builder: (context, orderProvider, child) {
+                                  return Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextButton.icon(
+                                        onPressed: () async {
+                                          DateTime? pickedDate = await showDatePicker(
+                                            context: context,
+                                            initialDate: orderProvider.selectedDate ??
+                                                DateTime.now(),
+                                            firstDate: DateTime(2020),
+                                            lastDate: DateTime(2100),
+                                          );
+                                          if (pickedDate != null) {
+                                            orderProvider.updateSelectedDate(pickedDate);
+                                          }
+                                        },
+                                        icon: Icon(Icons.calendar_month),
+                                        label: Text(orderProvider.selectedDate == null
+                                            ? "Select Date"
+                                            : DateFormat('dd-MM-yyyy')
+                                                .format(orderProvider.selectedDate!)),
+                                      ),
+                                      if (orderProvider.selectedDate != null)
+                                        IconButton(
+                                          onPressed: () =>
+                                              orderProvider.updateSelectedDate(null),
+                                          icon: Icon(Icons.clear, color: Colors.red),
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              SizedBox(
+                                width: 200,
+                                child: CustomDropdown(
+                                  hintText: 'Filter By status',
+                                  initialValue: 'All order',
+                                  items: [
+                                    'All order',
+                                    'pending',
+                                    'processing',
+                                    'shipped',
+                                    'delivered',
+                                    'cancelled'
+                                  ],
+                                  displayItem: (val) => val,
+                                  onChanged: (newValue) {
+                                    if (newValue?.toLowerCase() == 'all order') {
+                                      context.read<OrderProvider>().loadOrders();
+                                    } else {
+                                      context.read<OrderProvider>().filterOrders(newValue!);
+                                    }
+                                  },
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return 'Please select status';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    context.read<OrderProvider>().loadOrders();
+                                  },
+                                  icon: Icon(Icons.refresh)),
+                            ],
+                          );
+                        },
                       ),
                       Gap(defaultPadding),
                       OrderListSection(),

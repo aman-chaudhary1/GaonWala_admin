@@ -30,63 +30,66 @@ class OrderListSection extends StatelessWidget {
             "All Order",
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(
-            width: double.infinity,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Checkbox(
-                        value: orderProvider.selectedOrderIds.length == dataProvider.orders.length && dataProvider.orders.isNotEmpty,
-                        onChanged: (val) {
-                          orderProvider.selectAll(dataProvider.orders);
-                        },
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 1000),
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    // minWidth: 600,
+                    columns: [
+                      DataColumn(
+                        label: Checkbox(
+                          value: orderProvider.selectedOrderIds.length == dataProvider.orders.length && dataProvider.orders.isNotEmpty,
+                          onChanged: (val) {
+                            orderProvider.selectAll(dataProvider.orders);
+                          },
+                        ),
                       ),
+                      DataColumn(
+                        label: Text("Customer Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Order Amount"),
+                      ),
+                      DataColumn(
+                        label: Text("Payment"),
+                      ),
+                      DataColumn(
+                        label: Text("Status"),
+                      ),
+                      DataColumn(
+                        label: Text("Date"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.orders.length,
+                      (index) {
+                        final order = dataProvider.orders[index];
+                        return orderDataRow(
+                          order,
+                          index + 1,
+                          isSelected: orderProvider.isSelected(order.sId ?? ''),
+                          onSelect: (val) {
+                            orderProvider.toggleSelection(order.sId ?? '');
+                          },
+                          delete: () {
+                            context.read<OrderProvider>().deleteOrder(order.sId!);
+                          },
+                          edit: () {
+                            showOrderForm(context, order);
+                          },
+                        );
+                      },
                     ),
-                    DataColumn(
-                      label: Text("Customer Name"),
-                    ),
-                    DataColumn(
-                      label: Text("Order Amount"),
-                    ),
-                    DataColumn(
-                      label: Text("Payment"),
-                    ),
-                    DataColumn(
-                      label: Text("Status"),
-                    ),
-                    DataColumn(
-                      label: Text("Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.orders.length,
-                    (index) {
-                      final order = dataProvider.orders[index];
-                      return orderDataRow(
-                        order,
-                        index + 1,
-                        isSelected: orderProvider.isSelected(order.sId ?? ''),
-                        onSelect: (val) {
-                          orderProvider.toggleSelection(order.sId ?? '');
-                        },
-                        delete: () {
-                          context.read<OrderProvider>().deleteOrder(order.sId!);
-                        },
-                        edit: () {
-                          showOrderForm(context, order);
-                        },
-                      );
-                    },
                   ),
                 );
               },

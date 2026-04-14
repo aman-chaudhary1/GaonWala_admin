@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/data/data_provider.dart';
+import '../../../../utility/responsive.dart';
 import '../../../../utility/constants.dart';
 
 class UsersHeader extends StatelessWidget {
@@ -12,11 +13,13 @@ class UsersHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          "Users",
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        Spacer(flex: 2),
+        if (!Responsive.isMobile(context))
+          Text(
+            "Users",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        if (!Responsive.isMobile(context))
+          Spacer(flex: 2),
         Expanded(
           child: SearchField(),
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import '../../../utility/responsive.dart';
 import '../../../utility/constants.dart';
 import '../../../widgets/profile_card.dart';
 import '../provider/order_provider.dart';
@@ -14,11 +15,13 @@ class OrderHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          "Orders",
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        Spacer(flex: 2),
+        if (!Responsive.isMobile(context))
+          Text(
+            "Orders",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        if (!Responsive.isMobile(context))
+          Spacer(flex: 2),
         Expanded(child: SearchField(
           onChange: (val) {
             //TODO: should complete call filterOrders

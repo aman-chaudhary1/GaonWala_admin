@@ -26,36 +26,43 @@ class PosterScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "My Posters",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ),
-                          ElevatedButton.icon(
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: defaultPadding * 1.5,
-                                vertical: defaultPadding,
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isSmall = constraints.maxWidth < 600;
+                          return Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
+                              SizedBox(
+                                width: isSmall ? constraints.maxWidth : 200,
+                                child: Text(
+                                  "My Posters",
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                ),
                               ),
-                            ),
-                            onPressed: () {
-                              showAddPosterForm(context, null);
-                            },
-                            icon: Icon(Icons.add),
-                            label: Text("Add New"),
-                          ),
-                          Gap(20),
-                          IconButton(
-                              onPressed: () {
-                                //TODO: should complete call getAllPosters
-                                context.dataProvider.getAllPosters(showSnack:true);
-                              },
-                              icon: Icon(Icons.refresh)),
-                        ],
+                              ElevatedButton.icon(
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: defaultPadding * 1.5,
+                                    vertical: defaultPadding,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showAddPosterForm(context, null);
+                                },
+                                icon: Icon(Icons.add),
+                                label: Text("Add New"),
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    context.dataProvider
+                                        .getAllPosters(showSnack: true);
+                                  },
+                                  icon: Icon(Icons.refresh)),
+                            ],
+                          );
+                        },
                       ),
                       Gap(defaultPadding),
                       PosterListSection(),

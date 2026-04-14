@@ -28,32 +28,35 @@ class PosterListSection extends StatelessWidget {
             "All Posters",
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(
-            width: double.infinity,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Category Name"),
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 500),
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    // minWidth: 600,
+                    columns: [
+                      DataColumn(
+                        label: Text("Category Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.posters.length,
+                      (index) => posterDataRow(dataProvider.posters[index], delete: () {
+                        //TODO: should complete call deletePoster
+                        context.posterProvider.deletePoster(dataProvider.posters[index]);
+                      }, edit: () {
+                        showAddPosterForm(context, dataProvider.posters[index]);
+                      }),
                     ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.posters.length,
-                    (index) => posterDataRow(dataProvider.posters[index], delete: () {
-                      //TODO: should complete call deletePoster
-                      context.posterProvider.deletePoster(dataProvider.posters[index]);
-                    }, edit: () {
-                      showAddPosterForm(context, dataProvider.posters[index]);
-                    }),
                   ),
                 );
               },

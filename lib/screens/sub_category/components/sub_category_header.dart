@@ -1,6 +1,7 @@
 import 'package:sazedar_admin/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../utility/responsive.dart';
 import '../../../utility/constants.dart';
 import '../../../widgets/profile_card.dart';
 
@@ -14,11 +15,13 @@ class SubCategoryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          "Sub Category",
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        Spacer(flex: 2),
+        if (!Responsive.isMobile(context))
+          Text(
+            "Sub Category",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        if (!Responsive.isMobile(context))
+          Spacer(flex: 2),
         Expanded(child: SearchField(
           onChange: (val) {
             //TODO: should complete call filterSubCategories(complete)

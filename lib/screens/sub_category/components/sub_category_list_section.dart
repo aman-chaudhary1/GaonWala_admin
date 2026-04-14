@@ -29,42 +29,45 @@ class SubCategoryListSection extends StatelessWidget {
             "All SubCategory",
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(
-            width: double.infinity,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("SubCategory Name"),
-                    ),
-                    DataColumn(
-                      label: Text("Category"),
-                    ),
-                    DataColumn(
-                      label: Text("Added Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.subCategories.length,
-                    (index) => subCategoryDataRow(
-                      dataProvider.subCategories[index],
-                      index + 1,
-                      edit: () {
-                        showAddSubCategoryForm(context, dataProvider.subCategories[index]);
-                      },
-                      delete: () {
-                        //TODO: should complete call deleteSubCategory(complete)
-                        context.subCategoryProvider.deleteSubCategory(dataProvider.subCategories[index]);
-                      },
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 800),
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    // minWidth: 600,
+                    columns: [
+                      DataColumn(
+                        label: Text("SubCategory Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Category"),
+                      ),
+                      DataColumn(
+                        label: Text("Added Date"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.subCategories.length,
+                      (index) => subCategoryDataRow(
+                        dataProvider.subCategories[index],
+                        index + 1,
+                        edit: () {
+                          showAddSubCategoryForm(context, dataProvider.subCategories[index]);
+                        },
+                        delete: () {
+                          //TODO: should complete call deleteSubCategory(complete)
+                          context.subCategoryProvider.deleteSubCategory(dataProvider.subCategories[index]);
+                        },
+                      ),
                     ),
                   ),
                 );

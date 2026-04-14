@@ -25,40 +25,43 @@ class SubCategoryScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "My Sub Categories",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                            ),
-                          ),
-                          ElevatedButton.icon(
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: defaultPadding * 1.5,
-                                vertical:
-                                defaultPadding,
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isSmall = constraints.maxWidth < 600;
+                          return Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
+                              SizedBox(
+                                width: isSmall ? constraints.maxWidth : 200,
+                                child: Text(
+                                  "My Sub Categories",
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                ),
                               ),
-                            ),
-                            onPressed: () {
-                              showAddSubCategoryForm(context,null);
-                            },
-                            icon: Icon(Icons.add),
-                            label: Text("Add New"),
-                          ),
-                          Gap(20),
-                          IconButton(
-                              onPressed: () {
-                                //TODO: should complete call getAllSubCategory(complete)
-                            context.dataProvider.getAllSubCategory(showSnack: true);
-                              },
-                              icon: Icon(Icons.refresh)),
-                        ],
+                              ElevatedButton.icon(
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: defaultPadding * 1.5,
+                                    vertical: defaultPadding,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showAddSubCategoryForm(context, null);
+                                },
+                                icon: Icon(Icons.add),
+                                label: Text("Add New"),
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    context.dataProvider
+                                        .getAllSubCategory(showSnack: true);
+                                  },
+                                  icon: Icon(Icons.refresh)),
+                            ],
+                          );
+                        },
                       ),
                       Gap(defaultPadding),
                       SubCategoryListSection(),
