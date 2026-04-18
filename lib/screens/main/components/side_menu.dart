@@ -127,6 +127,20 @@ class SideMenu extends StatelessWidget {
               context.mainScreenProvider.navigateToScreen('AppVersion');
             },
           ),
+          DrawerListTile(
+            title: "App Control",
+            svgSrc: "assets/icons/menu_setting.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('AppControl');
+            },
+          ),
+          DrawerListTile(
+            title: "User Reviews",
+            svgSrc: "assets/icons/menu_notification.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('Reviews');
+            },
+          ),
         ],
       ),
     );

@@ -81,6 +81,8 @@ import 'screens/login/provider/login_provider.dart';
 import 'screens/shopkeepers/provider/shopkeeper_provider.dart';
 import 'screens/vendor_products/provider/vendor_product_provider.dart';
 import 'screens/app_version/provider/version_provider.dart';
+import 'screens/app_control/provider/app_control_provider.dart';
+import 'screens/reviews/provider/review_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'utility/constants.dart';
@@ -180,6 +182,16 @@ void main() async {
           create: (context) => VersionProvider(context.read<DataProvider>()),
           update: (context, dataProvider, previous) =>
               previous ?? VersionProvider(dataProvider),
+        ),
+        ChangeNotifierProxyProvider<DataProvider, AppControlProvider>(
+          create: (context) => AppControlProvider(context.read<DataProvider>()),
+          update: (context, dataProvider, previous) =>
+              previous ?? AppControlProvider(dataProvider),
+        ),
+        ChangeNotifierProxyProvider<DataProvider, AdminReviewProvider>(
+          create: (context) => AdminReviewProvider(context.read<DataProvider>()),
+          update: (context, dataProvider, previous) =>
+              previous ?? AdminReviewProvider(dataProvider),
         ),
 
         /// Independent providers

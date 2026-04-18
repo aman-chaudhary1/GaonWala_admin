@@ -17,6 +17,8 @@ import '../../rural_area/rural_area_screen.dart';
 import '../../shopkeepers/shopkeepers_screen.dart';
 import '../../vendor_products/vendor_product_screen.dart';
 import '../../app_version/version_screen.dart';
+import '../../app_control/app_control_screen.dart';
+import '../../reviews/review_screen.dart';
 
 class MainScreenProvider extends ChangeNotifier{
   Widget selectedScreen = DashboardScreen();
@@ -72,6 +74,12 @@ class MainScreenProvider extends ChangeNotifier{
         break;
       case 'AppVersion':
         selectedScreen = VersionUpdateScreen();
+        break;
+      case 'AppControl':
+        selectedScreen = AppControlScreen();
+        break;
+      case 'Reviews':
+        selectedScreen = AdminReviewScreen();
         break;
       default:
         selectedScreen = DashboardScreen();
