@@ -23,11 +23,18 @@ class ShopkeeperProvider extends ChangeNotifier {
     try {
       final response = await service.getItems(endpointUrl: 'users');
       if (response.isOk && response.body != null) {
-        final List<dynamic> data = response.body['data'] ?? [];
+        // Robust JSON parsing for web environments
+        final dynamic responseBody = response.body is String 
+            ? json.decode(response.body) 
+            : response.body;
+
+        final List<dynamic> data = responseBody['data'] ?? [];
         shopkeepers = data
             .map((u) => User.fromJson(u))
             .where((u) => u.role == 'shopkeeper')
             .toList();
+      } else {
+        print("❌ Shopkeeper Error: ${response.statusCode} - ${response.statusText}");
       }
     } catch (e) {
       print('Error fetching shopkeepers: $e');

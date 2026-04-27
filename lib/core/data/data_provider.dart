@@ -633,8 +633,13 @@ class DataProvider extends ChangeNotifier {
     try {
       Response response = await service.getItems(endpointUrl: 'users');
       if (response.isOk) {
+        // Robust JSON parsing for web environments
+        final dynamic responseBody = response.body is String 
+            ? json.decode(response.body) 
+            : response.body;
+
         ApiResponse<List<User>> apiResponse = ApiResponse<List<User>>.fromJson(
-            response.body,
+            responseBody,
             (json) =>
                 (json as List).map((item) => User.fromJson(item)).toList());
         _allUsers = apiResponse.data ?? [];
@@ -643,13 +648,14 @@ class DataProvider extends ChangeNotifier {
         if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
       } else {
         print("❌ Error fetching users: ${response.statusText} (${response.statusCode})");
+        print("❌ Response Body: ${response.bodyString}");
         if (response.statusCode == 401) {
           print("⚠️ Authorization failed. Please log out and log back in as an Admin.");
         }
       }
     } catch (e) {
       print("❌ Parsing error in getAllUsers: $e");
-      SnackBarHelper.showErrorSnackBar(e.toString());
+      SnackBarHelper.showErrorSnackBar("Data parsing error. Check console for details.");
     }
     return _filteredUsers;
   }

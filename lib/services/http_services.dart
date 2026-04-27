@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get_connect.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 import '../utility/constants.dart';
 
 class HttpService {
@@ -19,6 +20,13 @@ class HttpService {
       if (token != null) {
         request.headers['Authorization'] = 'Bearer $token';
       }
+      
+      // Added logging for debugging production network issues
+      if (kDebugMode || true) { // Force log in production for now to diagnose issue
+        print('🌐 [HTTP Request] ${request.method} ${request.url}');
+        // print('🌐 Headers: ${request.headers}');
+      }
+      
       return request;
     });
   }
