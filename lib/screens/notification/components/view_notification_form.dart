@@ -20,107 +20,114 @@ class ViewNotificationForm extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(defaultPadding),
-        width: size.width * 0.5, // Adjust width based on screen size
+        width: size.width * 0.5,
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3),
-            ),
-          ],
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(notification?.title ?? 'N/A',
-                    style: TextStyle(fontSize: 16)),
-              ],
-            ),
-            Gap(10),
-            Container(
-              margin: EdgeInsets.only(top: 20),
-              padding: EdgeInsets.all(defaultPadding),
-              decoration: BoxDecoration(
-                color: secondaryColor, // Light grey background to stand out
-                borderRadius: BorderRadius.circular(8.0),
-                border: Border.all(
-                    color: Colors.blueAccent), // Blue border for emphasis
-              ),
-              child: Consumer<NotificationProvider>(
-                builder: (context, notificationProvider, child) {
-                  int totalSend = notificationProvider
-                          .notificationResult?.successDelivery ??
-                      0;
-                  int totalOpened = notificationProvider
-                          .notificationResult?.openedNotification ??
-                      0;
-                  int totalFailed =
-                      notificationProvider.notificationResult?.failedDelivery ??
-                          0;
-                  int totalError = notificationProvider
-                          .notificationResult?.erroredDelivery ??
-                      0;
-                  double calculatePercentage(int notificationCount) {
-                    if (totalSend == 0) {
-                      return 0;
-                    } else {
-                      return (notificationCount / totalSend) * 100;
-                    }
-                  }
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      NotificationCard(
-                        text: 'Total Send',
-                        color: Colors.blue,
-                        number: totalSend,
-                        percentage: calculatePercentage(totalSend),
-                      ),
-                      NotificationCard(
-                        text: 'Total Opened',
-                        color: Colors.green,
-                        number: totalOpened,
-                        percentage: calculatePercentage(totalOpened),
-                      ),
-                      NotificationCard(
-                        text: 'Total Failed',
-                        color: Colors.red,
-                        number: totalFailed,
-                        percentage: calculatePercentage(totalFailed),
-                      ),
-                      NotificationCard(
-                        text: 'Total Error',
-                        color: Colors.yellow,
-                        number: totalError,
-                        percentage: calculatePercentage(totalError),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            Gap(10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: secondaryColor),
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel'),
+            if (notification?.imageUrl != null && notification!.imageUrl!.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  notification!.imageUrl!,
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Icon(Icons.image_not_supported, size: 50),
                 ),
-              ],
+              ),
+            Gap(20),
+            Text(
+              "Title",
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            Text(
+              notification?.title ?? 'N/A',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Gap(15),
+            Text(
+              "Description",
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            Text(
+              notification?.description ?? 'N/A',
+              style: TextStyle(fontSize: 14),
+            ),
+            Gap(20),
+            Divider(color: Colors.grey.withOpacity(0.2)),
+            Gap(10),
+            _buildDetailRow("Sent To:", notification?.userId != null ? (notification?.userId!['name'] ?? 'Unknown') : "All Users"),
+            _buildDetailRow("Sent Date:", notification?.createdAt?.split('T').first ?? 'N/A'),
+            _buildStatusRow(notification),
+            Gap(30),
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: secondaryColor,
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Close'),
+              ),
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(color: Colors.grey)),
+          Text(value, style: TextStyle(fontWeight: FontWeight.w500)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusRow(MyNotification? notification) {
+    String status = "Sent";
+    Color statusColor = Colors.orange;
+
+    if (notification?.userId != null) {
+      final String targetUserId = notification?.userId!['_id'] ?? '';
+      final bool isRead = notification?.readBy?.contains(targetUserId) ?? false;
+      status = isRead ? "Read by user" : "Unread by user";
+      statusColor = isRead ? Colors.green : Colors.orange;
+    } else {
+      int count = notification?.readBy?.length ?? 0;
+      status = "$count users read this";
+      statusColor = Colors.blue;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("Status:", style: TextStyle(color: Colors.grey)),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: statusColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: statusColor.withOpacity(0.5)),
+            ),
+            child: Text(
+              status,
+              style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
     );
   }

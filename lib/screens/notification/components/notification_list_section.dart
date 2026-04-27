@@ -45,6 +45,12 @@ class NotificationListSection extends StatelessWidget {
                         label: Text("Description"),
                       ),
                       DataColumn(
+                        label: Text("Sent To"),
+                      ),
+                      DataColumn(
+                        label: Text("Status"),
+                      ),
+                      DataColumn(
                         label: Text("Send Date"),
                       ),
                       DataColumn(
@@ -61,7 +67,6 @@ class NotificationListSection extends StatelessWidget {
                         viewNotificationStatics(
                             context, dataProvider.notifications[index]);
                       }, delete: () {
-                        //TODO: should complete call deleteNotification
                         context.notificationProvider.deleteNotification(
                             dataProvider.notifications[index]);
                       }),
@@ -79,6 +84,23 @@ class NotificationListSection extends StatelessWidget {
 
 DataRow notificationDataRow(MyNotification notificationInfo, int index,
     {Function? edit, Function? delete}) {
+  String sentTo = "All Users";
+  if (notificationInfo.userId != null) {
+    sentTo = notificationInfo.userId!['name'] ?? "Unknown User";
+  }
+
+  String status = "Sent";
+  if (notificationInfo.userId != null) {
+    // For targeted notifications, check if the user is in readBy
+    final String targetUserId = notificationInfo.userId!['_id'] ?? '';
+    final bool isRead = notificationInfo.readBy?.contains(targetUserId) ?? false;
+    status = isRead ? "Read" : "Unread";
+  } else {
+    // For global notifications, show read count
+    int readCount = notificationInfo.readBy?.length ?? 0;
+    status = "$readCount Reads";
+  }
+
   return DataRow(
     cells: [
       DataCell(
@@ -101,7 +123,22 @@ DataRow notificationDataRow(MyNotification notificationInfo, int index,
         ),
       ),
       DataCell(Text(notificationInfo.description ?? '')),
-      DataCell(Text(notificationInfo.createdAt ?? '')),
+      DataCell(Text(sentTo)),
+      DataCell(Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: status == "Read" ? Colors.green.withOpacity(0.2) : Colors.orange.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          status,
+          style: TextStyle(
+            color: status == "Read" ? Colors.green : Colors.orange,
+            fontSize: 12,
+          ),
+        ),
+      )),
+      DataCell(Text(notificationInfo.createdAt?.split('T').first ?? '')),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

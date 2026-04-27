@@ -82,44 +82,12 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  //TODO: should complete getNotificationInfo
-  getNotificationInfo(MyNotification? notification) async {
-    try {
-      if (notification == null) {
-        SnackBarHelper.showErrorSnackBar('Notification went wrong');
-        return;
-      }
-
-      final response = await service.getItems(
-          endpointUrl:
-              'notification/track-notification/${notification.notificationId}');
-      if (response.isOk) {
-        final ApiResponse<NotificationResult> apiResponse =
-            ApiResponse<NotificationResult>.fromJson(
-                response.body,
-                (json) =>
-                    NotificationResult.fromJson(json as Map<String, dynamic>));
-        if (apiResponse.success == true) {
-          NotificationResult? myNotificationResult = apiResponse.data;
-          notificationResult = myNotificationResult;
-          print(notificationResult?.platform);
-          log('Notification info fetched');
-          notifyListeners();
-          return null;
-        } else {
-          SnackBarHelper.showErrorSnackBar('${apiResponse.message}');
-          log('Failed to fetch notification info: ${apiResponse.message}');
-          return 'Failed to fetch data';
-        }
-      } else {
-        SnackBarHelper.showErrorSnackBar(
-            'Error ${response.body?['message']} ?? response.statusText');
-        return 'Error ${response.body?['message'] ?? response.statusText}';
-      }
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
+  getNotificationInfo(MyNotification? notification) {
+    // We no longer need to call track-notification API because 
+    // read status is now tracked directly in the Notification model's readBy field.
+    // This also avoids issues with FCM IDs containing special characters.
+    notificationResult = null; 
+    notifyListeners();
   }
 
   clearFields() {
