@@ -16,6 +16,7 @@ import '../../models/sub_category.dart';
 import '../../models/variant.dart';
 import '../../models/user.dart';
 import 'dart:async';
+import 'dart:convert';
 import '../../utility/notification_helper.dart';
 import '../../utility/sound_helper.dart';
 
@@ -102,6 +103,7 @@ class DataProvider extends ChangeNotifier {
       getAllUsers(),
     ]);
     print("✅ DataProvider: All data refreshed.");
+    print("📊 [Stats] Users: ${_allUsers.length}, Products: ${_allProducts.length}, Orders: ${_allOrders.length}, Categories: ${_allCategories.length}");
   }
 
   void startOrderPolling() {
@@ -633,6 +635,8 @@ class DataProvider extends ChangeNotifier {
     try {
       Response response = await service.getItems(endpointUrl: 'users');
       if (response.isOk) {
+        print("📥 [getAllUsers] Response Received. Body Type: ${response.body.runtimeType}");
+        
         // Robust JSON parsing for web environments
         final dynamic responseBody = response.body is String 
             ? json.decode(response.body) 
@@ -643,6 +647,7 @@ class DataProvider extends ChangeNotifier {
             (json) =>
                 (json as List).map((item) => User.fromJson(item)).toList());
         _allUsers = apiResponse.data ?? [];
+        print("📥 [getAllUsers] Successfully parsed ${_allUsers.length} users.");
         _filteredUsers = List.from(_allUsers);
         notifyListeners();
         if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);

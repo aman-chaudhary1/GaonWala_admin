@@ -23,6 +23,21 @@ class ShopkeepersHeader extends StatelessWidget {
         Expanded(
           child: SearchField(),
         ),
+        SizedBox(width: defaultPadding),
+        ElevatedButton.icon(
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.symmetric(
+              horizontal: defaultPadding * 1.5,
+              vertical: defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+            ),
+            backgroundColor: primaryColor,
+          ),
+          onPressed: () {
+            context.read<DataProvider>().getAllUsers(showSnack: true);
+          },
+          icon: Icon(Icons.refresh),
+          label: Text("Refresh"),
+        ),
       ],
     );
   }

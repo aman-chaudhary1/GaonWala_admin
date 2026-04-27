@@ -17,14 +17,17 @@ class HttpService {
       final token = prefs.getString('token');
       
       request.headers['Accept'] = 'application/json';
-      if (token != null) {
+      if (token != null && token.isNotEmpty) {
         request.headers['Authorization'] = 'Bearer $token';
       }
       
-      // Added logging for debugging production network issues
-      if (kDebugMode || true) { // Force log in production for now to diagnose issue
+      // Force log in production for now to diagnose issue
+      if (kDebugMode || true) {
         print('🌐 [HTTP Request] ${request.method} ${request.url}');
-        // print('🌐 Headers: ${request.headers}');
+        print('🌐 [Auth Check] Token present: ${token != null && token.isNotEmpty}');
+        if (token == null || token.isEmpty) {
+           print('⚠️ [WARNING] No token found in SharedPreferences!');
+        }
       }
       
       return request;
