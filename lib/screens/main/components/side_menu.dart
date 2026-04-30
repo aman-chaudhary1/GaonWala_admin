@@ -65,6 +65,13 @@ class SideMenu extends StatelessWidget {
             },
           ),
           DrawerListTile(
+            title: "Vendor Orders",
+            svgSrc: "assets/icons/menu_store.svg",
+            press: () {
+              context.mainScreenProvider.navigateToScreen('VendorOrders');
+            },
+          ),
+          DrawerListTile(
             title: "Coupons",
             svgSrc: "assets/icons/menu_setting.svg",
             press: () {

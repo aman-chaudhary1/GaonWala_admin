@@ -57,11 +57,19 @@ class ProductImageCard extends StatelessWidget {
                   else if (imageUrlForUpdateImage != null)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        imageUrlForUpdateImage ?? '',
-                        width: double.infinity,
-                        height: 80,
-                        fit: BoxFit.scaleDown,
+                      child: Builder(
+                        builder: (context) {
+                          String url = imageUrlForUpdateImage ?? '';
+                          if (url.endsWith('.avif')) {
+                            url = url.replaceAll('.avif', '.jpg');
+                          }
+                          return Image.network(
+                            url,
+                            width: double.infinity,
+                            height: 80,
+                            fit: BoxFit.scaleDown,
+                          );
+                        }
                       ),
                     )
                   else

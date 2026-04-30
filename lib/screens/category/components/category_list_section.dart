@@ -78,13 +78,21 @@ DataRow categoryDataRow(Category CatInfo, {Function? edit, Function? delete}) {
       DataCell(
         Row(
           children: [
-            Image.network(
-              CatInfo.image ?? '',
-              height: 30,
-              width: 30,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Icon(Icons.error);
-              },
+            Builder(
+              builder: (context) {
+                String url = CatInfo.image ?? '';
+                if (url.endsWith('.avif')) {
+                  url = url.replaceAll('.avif', '.jpg');
+                }
+                return Image.network(
+                  url,
+                  height: 30,
+                  width: 30,
+                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                    return Icon(Icons.error);
+                  },
+                );
+              }
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),

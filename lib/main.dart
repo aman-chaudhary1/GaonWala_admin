@@ -86,6 +86,7 @@ import 'screens/reviews/provider/review_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'utility/constants.dart';
+import 'screens/vendor_orders/provider/vendor_order_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -197,6 +198,7 @@ void main() async {
         /// Independent providers
         ChangeNotifierProvider(create: (_) => MainScreenProvider()),
         ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => VendorOrderProvider()),
       ],
       child: MyApp(),
     ),

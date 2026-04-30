@@ -170,6 +170,8 @@ class Items {
   String? variant;
   String? sId;
   String? unit;
+  String? vendorId;
+  double? shopkeeperPrice;
 
   Items(
       {this.productID,
@@ -178,7 +180,9 @@ class Items {
         this.price,
         this.variant,
         this.sId,
-        this.unit});
+        this.unit,
+        this.vendorId,
+        this.shopkeeperPrice});
 
   Items.fromJson(Map<String, dynamic> json) {
     productID = json['productID'];
@@ -188,6 +192,8 @@ class Items {
     variant = json['variant'];
     sId = json['_id'];
     unit = json['unit'];
+    vendorId = json['vendorId'];
+    shopkeeperPrice = json['shopkeeperPrice']?.toDouble();
   }
 
   Map<String, dynamic> toJson() {
@@ -199,6 +205,8 @@ class Items {
     data['variant'] = this.variant;
     data['_id'] = this.sId;
     data['unit'] = this.unit;
+    data['vendorId'] = this.vendorId;
+    data['shopkeeperPrice'] = this.shopkeeperPrice;
     return data;
   }
 }

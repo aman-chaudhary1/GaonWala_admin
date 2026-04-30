@@ -30,6 +30,7 @@ class CustomDropdown<T> extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0),
           ),
         ),
+        isExpanded: true,
         initialValue: initialValue,
         items: items.map((T value) {
           return DropdownMenuItem<T>(

@@ -35,7 +35,7 @@ class ProductListSection extends StatelessWidget {
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
                 return ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: 1000),
+                  constraints: BoxConstraints(minWidth: 1150),
                   child: DataTable(
                     columnSpacing: defaultPadding,
                     columns: [
@@ -93,19 +93,27 @@ DataRow productDataRow(Product productInfo, {Function? edit, Function? delete}) 
           mainAxisSize: MainAxisSize.min,
           children: [
             if (productInfo.images != null && productInfo.images!.isNotEmpty)
-              Image.network(
-                productInfo.images!.first.url ?? '',
-                height: 30,
-                width: 30,
-                fit: BoxFit.cover,
-                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                  return Icon(Icons.error, size: 30);
-                },
+              Builder(
+                builder: (context) {
+                  String url = productInfo.images!.first.url ?? '';
+                  if (url.endsWith('.avif')) {
+                    url = url.replaceAll('.avif', '.jpg');
+                  }
+                  return Image.network(
+                    url,
+                    height: 30,
+                    width: 30,
+                    fit: BoxFit.cover,
+                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                      return Icon(Icons.error, size: 30);
+                    },
+                  );
+                }
               )
             else
               Icon(Icons.image, size: 30),
             SizedBox(width: defaultPadding),
-            Flexible(
+            Expanded(
               child: Text(
                 '${productInfo.name ?? ''}${productInfo.unit != null && productInfo.unit!.isNotEmpty ? ' (${productInfo.unit})' : ''}',
                 overflow: TextOverflow.ellipsis,

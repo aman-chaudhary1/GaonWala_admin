@@ -74,13 +74,21 @@ DataRow posterDataRow(Poster poster, {Function? edit, Function? delete}) {
       DataCell(
         Row(
           children: [
-            Image.network(
-              poster.imageUrl ?? '',
-              height: 30,
-              width: 30,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Icon(Icons.error);
-              },
+            Builder(
+              builder: (context) {
+                String url = poster.imageUrl ?? '';
+                if (url.endsWith('.avif')) {
+                  url = url.replaceAll('.avif', '.jpg');
+                }
+                return Image.network(
+                  url,
+                  height: 30,
+                  width: 30,
+                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                    return Icon(Icons.error);
+                  },
+                );
+              }
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),

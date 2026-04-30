@@ -52,7 +52,7 @@ class _VendorProductListSectionState extends State<VendorProductListSection> {
                 }
 
                 return ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: 800),
+                  constraints: BoxConstraints(minWidth: 1150),
                   child: DataTable(
                     columnSpacing: defaultPadding,
                     columns: [
@@ -85,10 +85,24 @@ DataRow productDataRow(BuildContext context, Product product) {
         Row(
           children: [
             if (product.images != null && product.images!.isNotEmpty)
-              Image.network(product.images![0].url!, height: 30, width: 30, fit: BoxFit.cover),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(product.name ?? 'No Name'),
+              Builder(
+                builder: (context) {
+                  String url = product.images![0].url ?? '';
+                  if (url.endsWith('.avif')) {
+                    url = url.replaceAll('.avif', '.jpg');
+                  }
+                  return Image.network(url, height: 30, width: 30, fit: BoxFit.cover);
+                },
+              ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+                child: Text(
+                  product.name ?? 'No Name',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
             ),
           ],
         ),
@@ -101,27 +115,37 @@ DataRow productDataRow(BuildContext context, Product product) {
         Row(
           children: [
             IconButton(
+              constraints: BoxConstraints(),
+              padding: EdgeInsets.all(4),
               onPressed: () {
                 showProductDetailDialog(context, product);
               },
-              icon: Icon(Icons.visibility, color: Colors.blue),
+              icon: Icon(Icons.visibility, color: Colors.blue, size: 20),
               tooltip: 'View Details',
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 4),
             ElevatedButton(
               onPressed: () {
                 showApproveDialog(context, product);
               },
-              child: Text("Approve"),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Text("Approve", style: TextStyle(fontSize: 12)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                minimumSize: Size(60, 30),
+              ),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 4),
             TextButton(
               onPressed: () {
                 showRejectDialog(context, product);
               },
-              child: Text("Reject"),
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: Text("Reject", style: TextStyle(fontSize: 12)),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                minimumSize: Size(60, 30),
+              ),
             ),
           ],
         ),
@@ -295,17 +319,25 @@ void showProductDetailDialog(BuildContext context, Product product) {
                       padding: const EdgeInsets.only(right: 8.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          product.images![index].url!, 
-                          height: 200, 
-                          width: 200, 
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            height: 200,
-                            width: 200,
-                            color: Colors.white10,
-                            child: Icon(Icons.error, color: Colors.white24),
-                          ),
+                        child: Builder(
+                          builder: (context) {
+                            String url = product.images![index].url ?? '';
+                            if (url.endsWith('.avif')) {
+                              url = url.replaceAll('.avif', '.jpg');
+                            }
+                            return Image.network(
+                              url, 
+                              height: 200, 
+                              width: 200, 
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                height: 200,
+                                width: 200,
+                                color: Colors.white10,
+                                child: Icon(Icons.error, color: Colors.white24),
+                              ),
+                            );
+                          }
                         ),
                       ),
                     ),
