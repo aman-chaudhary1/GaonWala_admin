@@ -115,7 +115,7 @@ DataRow productDataRow(Product productInfo, {Function? edit, Function? delete}) 
             SizedBox(width: defaultPadding),
             Expanded(
               child: Text(
-                '${productInfo.name ?? ''}${productInfo.unit != null && productInfo.unit!.isNotEmpty ? ' (${productInfo.unit})' : ''}',
+                '${productInfo.name ?? ''}${productInfo.productSize != null ? ' (${productInfo.productSize} ${productInfo.unit ?? ''})' : (productInfo.unit != null && productInfo.unit!.isNotEmpty ? ' (${productInfo.unit})' : '')}',
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
