@@ -30,6 +30,10 @@ dependencies:
   shared_preferences: ^2.2.2
   change_app_package_name: ^1.5.0
   firebase_core: ^4.3.0
+  pdf: ^3.10.7
+  printing: ^5.11.1
+  qr_flutter: ^4.1.0
+  csv: ^6.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,6 @@
 import '../../../models/order.dart';
 import '../../../services/http_services.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../../../core/data/data_provider.dart';
 import 'package:intl/intl.dart';
 
@@ -13,28 +13,58 @@ class OrderProvider extends ChangeNotifier {
   String selectedOrderStatus = 'pending';
   Order? orderForUpdate;
   
-  // Date filtering logic
-  DateTime? _selectedDate;
-  DateTime? get selectedDate => _selectedDate;
+  // Advanced filtering state
+  String? filterShopkeeperId;
+  String? filterPaymentType;
+  String? filterOrderId;
+  DateTimeRange? filterDateRange;
+  String currentStatus = 'All order';
 
-  // Selection logic for bulk update
+  // Selection logic
   Set<String> selectedOrderIds = {};
 
   OrderProvider(this._dataProvider);
+
+  // Getters for filtered orders
+  List<Order> get filteredOrders => _applyAdvancedFilters(_dataProvider.orders);
+
   // Calls DataProvider fetch method
   Future<void> loadOrders() async {
-    String? formattedDate;
-    if (_selectedDate != null) {
-      formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate!);
-    }
-    await _dataProvider.getAllOrders(date: formattedDate);
-    clearSelection(); // Clear selection when refreshing orders
+    await _dataProvider.getAllOrders();
+    clearSelection();
     notifyListeners();
   }
 
   void updateSelectedDate(DateTime? date) {
-    _selectedDate = date;
-    loadOrders();
+    if (date == null) {
+      filterDateRange = null;
+    } else {
+      filterDateRange = DateTimeRange(
+        start: DateTime(date.year, date.month, date.day),
+        end: DateTime(date.year, date.month, date.day, 23, 59, 59),
+      );
+    }
+    notifyListeners();
+  }
+
+  void updateDateRange(DateTimeRange? range) {
+    filterDateRange = range;
+    notifyListeners();
+  }
+
+  void updateShopkeeperFilter(String? shopkeeperId) {
+    filterShopkeeperId = shopkeeperId;
+    notifyListeners();
+  }
+
+  void updatePaymentTypeFilter(String? paymentType) {
+    filterPaymentType = paymentType;
+    notifyListeners();
+  }
+
+  void updateOrderIdFilter(String? orderId) {
+    filterOrderId = orderId;
+    notifyListeners();
   }
 
   // Selection methods
@@ -50,10 +80,11 @@ class OrderProvider extends ChangeNotifier {
   }
 
   void selectAll(List<Order> orders) {
-    if (selectedOrderIds.length == orders.length) {
+    final currentlyFiltered = _applyAdvancedFilters(orders);
+    if (selectedOrderIds.length == currentlyFiltered.length && currentlyFiltered.isNotEmpty) {
       selectedOrderIds.clear();
     } else {
-      selectedOrderIds = orders.map((o) => o.sId!).toSet();
+      selectedOrderIds = currentlyFiltered.map((o) => o.sId!).toSet();
     }
     notifyListeners();
   }
@@ -70,10 +101,53 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Local filtering logic
+  List<Order> _applyAdvancedFilters(List<Order> orders) {
+    return orders.where((order) {
+      // Status Filter
+      if (currentStatus != 'All order' && order.orderStatus?.toLowerCase() != currentStatus.toLowerCase()) {
+        return false;
+      }
+
+      // Order ID Filter
+      if (filterOrderId != null && filterOrderId!.isNotEmpty) {
+        final shortId = order.sId?.substring((order.sId?.length ?? 0) - 6).toUpperCase() ?? '';
+        if (!order.sId!.toLowerCase().contains(filterOrderId!.toLowerCase()) && 
+            !shortId.contains(filterOrderId!.toUpperCase())) {
+          return false;
+        }
+      }
+
+      // Shopkeeper Filter
+      if (filterShopkeeperId != null && filterShopkeeperId!.isNotEmpty) {
+        bool hasVendorItem = order.items?.any((item) => item.vendorId == filterShopkeeperId) ?? false;
+        if (!hasVendorItem) return false;
+      }
+
+      // Payment Type Filter
+      if (filterPaymentType != null && filterPaymentType!.isNotEmpty) {
+        if (order.paymentMethod?.toLowerCase() != filterPaymentType!.toLowerCase()) {
+          return false;
+        }
+      }
+
+      // Date Range Filter
+      if (filterDateRange != null) {
+        if (order.orderDate == null) return false;
+        final orderDate = DateTime.parse(order.orderDate!).toLocal();
+        if (orderDate.isBefore(filterDateRange!.start) || orderDate.isAfter(filterDateRange!.end)) {
+          return false;
+        }
+      }
+
+      return true;
+    }).toList();
+  }
+
   // Calls DataProvider filter method
   Future<void> filterOrders(String status) async {
-    _dataProvider.filterOrders(status);
-    clearSelection(); // Clear selection when filter changes
+    currentStatus = status;
+    clearSelection();
     notifyListeners();
   }
   //TODO: should complete updateOrder

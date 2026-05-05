@@ -34,6 +34,7 @@ class OrderListSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
+                final orders = orderProvider.filteredOrders;
                 return ConstrainedBox(
                   constraints: BoxConstraints(minWidth: 1000),
                   child: DataTable(
@@ -42,7 +43,7 @@ class OrderListSection extends StatelessWidget {
                     columns: [
                       DataColumn(
                         label: Checkbox(
-                          value: orderProvider.selectedOrderIds.length == dataProvider.orders.length && dataProvider.orders.isNotEmpty,
+                          value: orderProvider.selectedOrderIds.length == orders.length && orders.isNotEmpty,
                           onChanged: (val) {
                             orderProvider.selectAll(dataProvider.orders);
                           },
@@ -71,9 +72,9 @@ class OrderListSection extends StatelessWidget {
                       ),
                     ],
                     rows: List.generate(
-                      dataProvider.orders.length,
+                      orders.length,
                       (index) {
-                        final order = dataProvider.orders[index];
+                        final order = orders[index];
                         return orderDataRow(
                           order,
                           index + 1,
