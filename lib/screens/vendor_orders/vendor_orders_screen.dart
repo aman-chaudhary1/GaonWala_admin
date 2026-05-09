@@ -131,7 +131,7 @@ class VendorOrdersScreen extends StatelessWidget {
                 Text('Order #$orderId',
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
                 const Spacer(),
-                _buildStatusBadge(order.orderStatus ?? 'pending'),
+                _buildStatusBadge(group.vendorStatus),
               ],
             ),
             const SizedBox(height: 4),
@@ -220,9 +220,22 @@ class VendorOrdersScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      '${item.productName ?? 'Unknown'} • ${item.unit ?? ''}',
-                      style: const TextStyle(color: Colors.white70, fontSize: 13),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${item.productName ?? 'Unknown'} • ${item.unit ?? ''}',
+                          style: const TextStyle(color: Colors.white70, fontSize: 13),
+                        ),
+                        Text(
+                          'Status: ${item.status ?? 'pending'}',
+                          style: TextStyle(
+                            color: (item.status == 'packed' || item.status == 'delivered') ? Colors.green : Colors.orange,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Column(

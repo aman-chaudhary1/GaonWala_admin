@@ -104,7 +104,7 @@ class VendorOrderProvider extends ChangeNotifier {
       _filteredGroups = List.from(_allGroups);
     } else {
       _filteredGroups = _allGroups
-          .where((g) => g.order.orderStatus?.toLowerCase() == _currentFilter.toLowerCase())
+          .where((g) => g.vendorStatus.toLowerCase() == _currentFilter.toLowerCase())
           .toList();
     }
   }
@@ -131,4 +131,20 @@ class VendorOrderGroup {
     required this.vendorEmail,
     required this.vendorItems,
   });
+
+  String get vendorStatus {
+    if (vendorItems.isEmpty) return 'pending';
+    
+    final statuses = vendorItems.map((i) => (i.status ?? 'pending').toLowerCase()).toSet();
+    
+    if (statuses.length == 1) return statuses.first;
+    
+    // Priority: If any are pending/accepted, overall is not yet packed.
+    if (statuses.contains('pending')) return 'pending';
+    if (statuses.contains('accepted')) return 'accepted';
+    if (statuses.contains('processing')) return 'processing';
+    if (statuses.contains('packed')) return 'packed';
+    
+    return statuses.first;
+  }
 }

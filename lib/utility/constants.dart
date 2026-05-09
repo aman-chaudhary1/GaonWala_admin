@@ -6,4 +6,4 @@ const bgColor = Color(0xFF212332);
 const defaultPadding = 16.0;
 
  const MAIN_URL = 'https://sazedar-backend.onrender.com/';
-//  const MAIN_URL = 'http://localhost:3000/';
+  //const MAIN_URL = 'http://localhost:3000/';

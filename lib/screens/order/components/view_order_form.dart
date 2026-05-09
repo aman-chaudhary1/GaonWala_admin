@@ -227,10 +227,24 @@ class OrderSubmitForm extends StatelessWidget {
       itemBuilder: (context, index) {
         final item = order!.items![index];
         return Padding(
-          padding: EdgeInsets.only(bottom: 4.0), // Add spacing between items
-          child: Text(
-              '${item.productName ?? 'Unknown Product'}${item.unit != null && item.unit!.isNotEmpty ? ' (${item.unit})' : ''}: ${item.quantity} x Rs ${item.price?.toStringAsFixed(2)}',
-              style: TextStyle(fontSize: 16)),
+          padding: EdgeInsets.only(bottom: 8.0), // Add spacing between items
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                  '${item.productName ?? 'Unknown Product'}${item.unit != null && item.unit!.isNotEmpty ? ' (${item.unit})' : ''}: ${item.quantity} x Rs ${item.price?.toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: 16)),
+              Text(
+                'Status: ${item.status ?? 'pending'}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: (item.status == 'packed' || item.status == 'delivered') ? Colors.green : Colors.orange,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Divider(color: Colors.white10),
+            ],
+          ),
         );
       },
     );
